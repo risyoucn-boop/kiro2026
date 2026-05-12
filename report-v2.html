@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>现管再造 v2 · 实战增强版：从理念到抓手</title>
+    <style>
+        :root {
+            --bg-dark: #0a0c10;
+            --bg-card: #10141b;
+            --accent-orange: #FF6A00;
+            --accent-cyan: #00e5ff;
+            --accent-red: #ff4d4f;
+            --accent-green: #52c41a;
+            --accent-gold: #ffd666;
+            --text-white: #ffffff;
+            --text-light: #e0e0e0;
+            --text-gray: #8892b0;
+            --text-dim: #5a6378;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --border-bright: rgba(0, 229, 255, 0.3);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", Roboto, Arial, sans-serif;
+            margin: 0;
+            padding: 40px 60px;
+            line-height: 1.6;
+            background-image:
+                radial-gradient(circle at 15% 10%, rgba(255, 106, 0, 0.06) 0%, transparent 45%),
+                radial-gradient(circle at 85% 90%, rgba(0, 229, 255, 0.06) 0%, transparent 45%);
+            background-attachment: fixed;
+        }
+
+        .container { max-width: 1280px; margin: 0 auto; }
+
+        /* ========= HERO ========= */
+        .hero {
+            text-align: center;
+            padding: 40px 0 60px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 60px;
+        }
+        .hero-tag {
+            display: inline-block;
+            color: var(--accent-cyan);
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            padding: 6px 16px;
+            border: 1px solid var(--border-bright);
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+        .hero-tag.v2 {
+            color: var(--accent-gold);
+            border-color: rgba(255, 214, 102, 0.4);
+            margin-left: 8px;
+        }
+        .hero h1 {
+            font-size: 2.8rem;
+            margin: 0 0 16px;
+            line-height: 1.3;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        .hero h1 .orange { color: var(--accent-orange); }
+        .hero h1 .cyan { color: var(--accent-cyan); text-shadow: 0 0 24px rgba(0, 229, 255, 0.4); }
+        .hero .subtitle { color: var(--text-gray); font-size: 1.05rem; letter-spacing: 2px; margin-top: 12px; }
+        .hero .meta { margin-top: 28px; font-size: 0.85rem; color: var(--text-dim); letter-spacing: 1px; }
+
+        /* ========= 章节 ========= */
+        .section { margin-bottom: 80px; }
+        .section-header { margin-bottom: 32px; }
+        .section-number {
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-orange);
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        .section-number.new {
+            color: var(--accent-gold);
+        }
+        .section-number.new::after {
+            content: ' ✦ NEW';
+            color: var(--accent-gold);
+            font-size: 0.7rem;
+            padding-left: 8px;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--text-white);
+            margin: 0 0 8px;
+            padding-left: 18px;
+            border-left: 4px solid var(--accent-cyan);
+            font-weight: 600;
+        }
+        .section-lead {
+            color: var(--text-gray);
+            margin: 12px 0 0 22px;
+            font-size: 1rem;
+            max-width: 900px;
+        }
+
+        /* ========= 通用 ========= */
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+        .card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-bright);
+            box-shadow: 0 12px 32px rgba(0, 229, 255, 0.08);
+        }
+
+        /* ========= 痛点卡 ========= */
+        .pain-card { border-left: 3px solid var(--accent-orange); }
+        .pain-card .icon { font-size: 2rem; margin-bottom: 14px; display: block; }
+        .pain-card h3 { color: var(--accent-orange); font-size: 1.2rem; margin: 0 0 12px; }
+        .pain-card p { color: var(--text-gray); margin: 0; font-size: 0.95rem; line-height: 1.7; }
+        .pain-stat {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 4px 10px;
+            background: rgba(255, 106, 0, 0.1);
+            color: var(--accent-orange);
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* ========= 带宽迁徙 ========= */
+        .bandwidth-overview {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 28px;
+        }
+        .bandwidth-headline { text-align: center; margin-bottom: 24px; }
+        .bandwidth-headline .big-num {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            letter-spacing: 2px;
+            text-shadow: 0 0 24px rgba(0, 229, 255, 0.3);
+        }
+        .bandwidth-headline .big-num .equals { color: var(--text-gray); margin: 0 16px; }
+        .bandwidth-headline p { color: var(--text-gray); margin: 8px 0 0; font-size: 1rem; }
+        .bandwidth-headline p strong { color: var(--text-white); }
+
+        .bar-row { margin-bottom: 18px; }
+        .bar-label {
+            display: flex; justify-content: space-between;
+            margin-bottom: 8px; font-size: 0.9rem;
+        }
+        .bar-label .mode { color: var(--text-gray); letter-spacing: 1px; font-family: 'Courier New', monospace; }
+        .bar-label .total { color: var(--text-white); font-weight: 600; }
+        .bar {
+            display: flex; height: 44px;
+            border-radius: 8px; overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .bar-seg {
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; color: var(--text-white); font-weight: 500;
+            overflow: hidden; white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        .bar-seg:hover { filter: brightness(1.2); }
+        .seg-p2  { background: linear-gradient(90deg, #ff6a00 0%, #ff8b3d 100%); }
+        .seg-p1  { background: linear-gradient(90deg, #ffb347 0%, #ffcc70 100%); color: #333; }
+        .seg-p0  { background: linear-gradient(90deg, #00e5ff 0%, #52c41a 100%); color: #003; font-weight: 700; }
+        .seg-etc { background: rgba(136, 146, 176, 0.3); color: var(--text-gray); }
+
+        .bar-legend {
+            display: flex; flex-wrap: wrap; gap: 20px;
+            justify-content: center; margin-top: 20px;
+            font-size: 0.82rem; color: var(--text-gray);
+        }
+        .legend-dot {
+            display: inline-block; width: 12px; height: 12px;
+            border-radius: 3px; margin-right: 6px; vertical-align: middle;
+        }
+
+        .data-table-container {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 8px 24px;
+        }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th {
+            color: var(--text-gray); font-weight: 400;
+            padding: 18px 12px; border-bottom: 1px solid var(--border);
+            font-size: 0.88rem; letter-spacing: 1px;
+        }
+        td {
+            padding: 20px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem; vertical-align: middle;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr.highlight-row { background: linear-gradient(90deg, rgba(0, 229, 255, 0.06) 0%, transparent 80%); }
+        tr.highlight-row td:first-child { border-left: 3px solid var(--accent-cyan); }
+
+        .priority-tag {
+            display: inline-block; padding: 3px 10px; border-radius: 4px;
+            font-family: 'Courier New', monospace; font-size: 0.75rem;
+            font-weight: bold; margin-right: 8px; letter-spacing: 1px;
+        }
+        .p-low { background: rgba(136,146,176,0.2); color: var(--text-gray); }
+        .p-mid { background: rgba(255, 179, 71, 0.15); color: #ffb347; }
+        .p-high { background: rgba(0, 229, 255, 0.15); color: var(--accent-cyan); }
+
+        .time-tag {
+            padding: 5px 12px; border-radius: 4px;
+            font-family: 'Courier New', monospace; font-weight: bold;
+            font-size: 0.9rem; display: inline-block;
+        }
+        .tag-old { background: rgba(255, 106, 0, 0.12); color: var(--accent-orange); }
+        .tag-new { background: rgba(0, 229, 255, 0.12); color: var(--accent-cyan); }
+
+        .change-rate { font-weight: bold; font-size: 0.95rem; font-family: 'Courier New', monospace; }
+        .change-rate.down { color: var(--accent-red); }
+        .change-rate.up { color: var(--accent-green); }
+        .change-rate.flat { color: var(--text-gray); font-weight: 400; }
+
+        /* ========= 过渡箭头 ========= */
+        .transition-arrow {
+            display: flex; align-items: center; justify-content: center;
+            gap: 20px; padding: 32px;
+            background: var(--glass);
+            border: 1px dashed var(--border);
+            border-radius: 16px; margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+        .transition-box {
+            padding: 14px 24px; border-radius: 8px;
+            font-size: 1rem; font-weight: 500;
+            min-width: 180px; text-align: center;
+        }
+        .trans-old {
+            background: rgba(255, 106, 0, 0.08);
+            color: var(--accent-orange);
+            border: 1px solid rgba(255, 106, 0, 0.3);
+            text-decoration: line-through;
+            text-decoration-color: rgba(255, 106, 0, 0.5);
+        }
+        .trans-new {
+            background: rgba(0, 229, 255, 0.08);
+            color: var(--accent-cyan);
+            border: 1px solid var(--border-bright);
+            font-weight: 700;
+        }
+        .arrow-icon { font-size: 1.6rem; color: var(--text-gray); }
+
+        /* ========= 角色卡 ========= */
+        .role-card { padding: 32px; }
+        .role-card .icon { font-size: 2.4rem; margin-bottom: 16px; display: block; }
+        .role-card .label {
+            color: var(--accent-cyan); font-size: 0.75rem;
+            text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 8px; display: block;
+        }
+        .role-card h3 { font-size: 1.35rem; margin: 0 0 18px; color: var(--text-white); }
+        .role-card ul { padding: 0; margin: 0 0 20px; list-style: none; }
+        .role-card li {
+            color: var(--text-gray); font-size: 0.92rem;
+            margin-bottom: 12px; line-height: 1.7;
+            position: relative; padding-left: 18px;
+        }
+        .role-card li::before { content: '▹'; position: absolute; left: 0; color: var(--accent-cyan); }
+        .role-card li strong { color: var(--text-light); }
+        .role-kpi {
+            padding: 12px 14px;
+            background: rgba(0, 229, 255, 0.06);
+            border-left: 3px solid var(--accent-cyan);
+            border-radius: 4px;
+            font-size: 0.85rem; color: var(--text-light);
+        }
+        .role-kpi-label {
+            display: block; color: var(--accent-cyan);
+            font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 4px;
+        }
+
+        /* ========= 话术萃取实战（新） ========= */
+        .script-demo {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px;
+            margin-top: 8px;
+        }
+        .script-demo-header {
+            display: flex; align-items: center;
+            gap: 16px; margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .script-demo-badge {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #ffb347 100%);
+            color: #1a1500;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+        }
+        .script-demo-header h3 { margin: 0; color: var(--text-white); font-size: 1.25rem; }
+        .script-demo-header .scene {
+            margin-left: auto;
+            color: var(--text-gray);
+            font-size: 0.88rem;
+        }
+        .script-demo-header .scene strong { color: var(--accent-gold); }
+
+        .script-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .script-box {
+            padding: 22px;
+            border-radius: 12px;
+            position: relative;
+        }
+        .script-bad {
+            background: rgba(255, 77, 79, 0.05);
+            border: 1px solid rgba(255, 77, 79, 0.25);
+        }
+        .script-good {
+            background: rgba(82, 196, 26, 0.05);
+            border: 1px solid rgba(82, 196, 26, 0.3);
+        }
+        .script-label {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+        .label-bad { background: rgba(255, 77, 79, 0.15); color: var(--accent-red); }
+        .label-good { background: rgba(82, 196, 26, 0.15); color: var(--accent-green); }
+
+        .script-quote {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            padding-left: 12px;
+            border-left: 3px solid rgba(255,255,255,0.1);
+            margin: 0 0 16px;
+            font-style: italic;
+        }
+        .script-good .script-quote { border-left-color: var(--accent-green); }
+        .script-bad .script-quote { border-left-color: var(--accent-red); }
+
+        .script-result {
+            display: flex; gap: 16px; flex-wrap: wrap;
+            padding-top: 14px;
+            border-top: 1px dashed rgba(255,255,255,0.08);
+            font-size: 0.85rem;
+        }
+        .result-chip {
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        .chip-bad { background: rgba(255, 77, 79, 0.1); color: var(--accent-red); }
+        .chip-good { background: rgba(82, 196, 26, 0.1); color: var(--accent-green); }
+
+        .script-takeaway {
+            margin-top: 22px;
+            padding: 16px 20px;
+            background: linear-gradient(90deg, rgba(0,229,255,0.08), transparent);
+            border-left: 3px solid var(--accent-cyan);
+            border-radius: 4px;
+            font-size: 0.92rem;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+        .script-takeaway strong { color: var(--accent-cyan); }
+
+        /* ========= 真实案例时间轴（新） ========= */
+        .case-card {
+            background: linear-gradient(145deg, rgba(255,214,102,0.04) 0%, rgba(0,229,255,0.02) 100%);
+            border: 1px solid rgba(255,214,102,0.2);
+            border-radius: 16px;
+            padding: 36px;
+        }
+        .case-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            flex-wrap: wrap; gap: 16px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 32px;
+        }
+        .case-title {
+            color: var(--text-white);
+            font-size: 1.3rem; margin: 0 0 8px;
+        }
+        .case-subtitle { color: var(--text-gray); font-size: 0.9rem; }
+        .case-badge {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+            color: #1a1500;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-align: right;
+        }
+        .case-badge small { display:block; font-size:0.7rem; opacity:0.7; font-weight:400; }
+
+        .timeline {
+            position: relative;
+            padding-left: 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 90px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--accent-orange) 0%, var(--accent-cyan) 100%);
+        }
+        .tl-row {
+            display: grid;
+            grid-template-columns: 80px 20px 1fr;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 0;
+        }
+        .tl-time {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-orange);
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding-top: 4px;
+        }
+        .tl-row.t-zero .tl-time { color: var(--accent-gold); font-size: 1rem; }
+        .tl-row.t-plus .tl-time { color: var(--accent-green); }
+
+        .tl-dot {
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-cyan);
+            margin: 8px auto 0;
+            z-index: 1;
+            position: relative;
+        }
+        .tl-row.t-zero .tl-dot { background: var(--accent-gold); border-color: var(--accent-gold); box-shadow: 0 0 16px var(--accent-gold); }
+        .tl-row.t-plus .tl-dot { border-color: var(--accent-green); }
+
+        .tl-content {
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        .tl-actor {
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .tl-row.t-zero .tl-actor { color: var(--accent-gold); }
+        .tl-desc { color: var(--text-light); font-size: 0.92rem; line-height: 1.6; }
+        .tl-desc strong { color: var(--text-white); }
+
+        .case-contrast {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+        .contrast-box {
+            padding: 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+        .contrast-old {
+            background: rgba(255, 77, 79, 0.06);
+            border-left: 3px solid var(--accent-red);
+        }
+        .contrast-new {
+            background: rgba(82, 196, 26, 0.06);
+            border-left: 3px solid var(--accent-green);
+        }
+        .contrast-box .cb-label {
+            display: block;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .contrast-old .cb-label { color: var(--accent-red); }
+        .contrast-new .cb-label { color: var(--accent-green); }
+        .contrast-box p { margin: 0; color: var(--text-light); }
+
+        /* ========= 落地路径 ========= */
+        .roadmap {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px;
+        }
+        .roadmap-line {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            position: relative;
+        }
+        .roadmap-line::before {
+            content: '';
+            position: absolute;
+            top: 28px; left: 8%; right: 8%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-orange) 0%, #ffb347 50%, var(--accent-cyan) 100%);
+            opacity: 0.4;
+        }
+        .stage { text-align: center; position: relative; padding: 0 12px; z-index: 1; }
+        .stage-dot {
+            width: 56px; height: 56px; border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-cyan);
+            margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; font-weight: 700;
+            color: var(--accent-cyan);
+            font-family: 'Courier New', monospace;
+        }
+        .stage:nth-child(1) .stage-dot { border-color: var(--accent-orange); color: var(--accent-orange); }
+        .stage:nth-child(2) .stage-dot { border-color: #ffb347; color: #ffb347; }
+
+        .stage-title { color: var(--text-white); font-size: 1.15rem; font-weight: 600; margin: 0 0 6px; }
+        .stage-period {
+            color: var(--text-dim); font-size: 0.8rem;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px; margin-bottom: 16px;
+        }
+        .stage-list {
+            list-style: none; padding: 16px; margin: 0;
+            text-align: left;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+        .stage-list li {
+            color: var(--text-gray); font-size: 0.88rem;
+            margin-bottom: 10px; padding-left: 18px;
+            position: relative; line-height: 1.6;
+        }
+        .stage-list li::before {
+            content: '✓'; position: absolute; left: 0;
+            color: var(--accent-cyan); font-weight: bold;
+        }
+        .stage-list li:last-child { margin-bottom: 0; }
+
+        /* ========= KPI ========= */
+        .kpi-card { text-align: center; padding: 24px 18px; }
+        .kpi-icon { font-size: 1.6rem; margin-bottom: 10px; display: block; }
+        .kpi-value {
+            font-size: 2.2rem; font-weight: 700;
+            color: var(--accent-cyan);
+            letter-spacing: 1px;
+            text-shadow: 0 0 16px rgba(0, 229, 255, 0.25);
+            line-height: 1.1; margin: 6px 0;
+        }
+        .kpi-value .unit { font-size: 1rem; color: var(--text-gray); font-weight: 400; margin-left: 2px; }
+        .kpi-label { color: var(--text-white); font-size: 0.95rem; font-weight: 500; margin-bottom: 6px; }
+        .kpi-desc { color: var(--text-dim); font-size: 0.78rem; line-height: 1.5; }
+
+        /* ========= 行业对标（新） ========= */
+        .benchmark-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 28px;
+        }
+        .benchmark-card h3 {
+            color: var(--text-white);
+            font-size: 1.15rem;
+            margin: 0 0 8px;
+        }
+        .benchmark-card .bm-lead {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+        .bm-row {
+            margin-bottom: 24px;
+        }
+        .bm-row:last-child { margin-bottom: 0; }
+        .bm-label {
+            display: flex; justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        .bm-label strong { color: var(--text-white); }
+        .bm-tracks { display: grid; gap: 6px; }
+        .bm-track {
+            display: grid;
+            grid-template-columns: 140px 1fr 80px;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+        }
+        .bm-track-name { color: var(--text-gray); text-align: right; }
+        .bm-track-name.us { color: var(--accent-cyan); font-weight: 700; }
+        .bm-track-bar {
+            height: 22px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .bm-track-fill {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            color: var(--text-white);
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .fill-industry-low { background: rgba(136,146,176,0.4); }
+        .fill-industry-avg { background: linear-gradient(90deg, #ffb347, #ff6a00); }
+        .fill-us { background: linear-gradient(90deg, #00e5ff 0%, #52c41a 100%); color:#003; }
+
+        .bm-track-value {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+        .bm-track-value.us { color: var(--accent-cyan); }
+
+        /* ========= ROI（新） ========= */
+        .roi-section {
+            background: linear-gradient(145deg, rgba(255,214,102,0.04) 0%, rgba(0,229,255,0.04) 100%);
+            border: 1px solid rgba(255,214,102,0.25);
+            border-radius: 16px;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 40px;
+            align-items: center;
+        }
+        .roi-left h3 {
+            color: var(--accent-gold);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            margin: 0 0 12px;
+        }
+        .roi-left .big {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--text-white);
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+        .roi-left .big .highlight {
+            color: var(--accent-gold);
+            text-shadow: 0 0 24px rgba(255, 214, 102, 0.3);
+        }
+        .roi-left p {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            margin: 0;
+            line-height: 1.7;
+        }
+
+        .roi-right { display: grid; gap: 12px; }
+        .roi-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 20px;
+            padding: 14px 18px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            font-size: 0.92rem;
+            align-items: center;
+        }
+        .roi-row-label { color: var(--text-gray); }
+        .roi-row-value {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: var(--text-white);
+        }
+        .roi-row.positive .roi-row-value { color: var(--accent-green); }
+        .roi-row.total {
+            background: rgba(82, 196, 26, 0.1);
+            border: 1px solid rgba(82, 196, 26, 0.3);
+        }
+        .roi-row.total .roi-row-label { color: var(--text-white); font-weight: 600; }
+        .roi-row.total .roi-row-value { color: var(--accent-green); font-size: 1.1rem; }
+
+        /* ========= Footer ========= */
+        .footer-banner {
+            margin-top: 80px;
+            padding: 48px 40px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            background:
+                linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.06), transparent),
+                linear-gradient(180deg, transparent, rgba(255, 106, 0, 0.03));
+            border-radius: 16px;
+        }
+        .footer-banner .quote-mark {
+            font-size: 3rem; color: var(--accent-cyan);
+            line-height: 1; opacity: 0.4;
+            font-family: Georgia, serif;
+        }
+        .footer-banner p {
+            font-size: 1.3rem; color: var(--text-white);
+            margin: 12px auto; font-weight: 300;
+            max-width: 900px; line-height: 1.7;
+        }
+        .footer-banner strong { color: var(--accent-cyan); font-weight: 600; }
+        .footer-banner .orange-accent { color: var(--accent-orange); font-weight: 600; }
+        .footer-sign {
+            margin-top: 24px; color: var(--text-dim);
+            font-size: 0.85rem; letter-spacing: 3px;
+        }
+
+        /* ========= 响应式 ========= */
+        @media (max-width: 900px) {
+            body { padding: 24px; }
+            .hero h1 { font-size: 1.8rem; }
+            .grid-3, .grid-2, .grid-4 { grid-template-columns: 1fr; }
+            .roadmap-line { grid-template-columns: 1fr; gap: 32px; }
+            .roadmap-line::before { display: none; }
+            .transition-arrow { flex-direction: column; }
+            .arrow-icon { transform: rotate(90deg); }
+            .script-compare, .case-contrast { grid-template-columns: 1fr; }
+            .roi-section { grid-template-columns: 1fr; gap: 24px; }
+            .bm-track { grid-template-columns: 90px 1fr 60px; font-size: 0.78rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HERO -->
+    <div class="hero">
+        <span class="hero-tag">PAONE × 服销现管 · 数智化转型白皮书</span>
+        <span class="hero-tag v2">V2 · 实战增强版</span>
+        <h1>现管再造：当 <span class="orange">PAone</span> 接管机械劳动，<br>组长该 <span class="cyan">去哪里？</span></h1>
+        <p class="subtitle">FROM IDEA TO EXECUTION · WITH REAL CASES & BENCHMARKS</p>
+        <div class="meta">服销团队长数字化落地研究 · 话术实战 · 案例时间轴 · 行业对标</div>
+    </div>
+
+    <!-- =================== 01 WHY =================== -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-number">01 / WHY — 困境诊断</span>
+            <h2 class="section-title">组长的一天，为什么总是"很忙却没干成事"？</h2>
+            <p class="section-lead">在进入收益账本之前，先直面当下现管岗位的三重结构性痛点 —— 这不是个人能力问题，而是工具缺位下的必然。</p>
+        </div>
+
+        <div class="grid-3">
+            <div class="card pain-card">
+                <span class="icon">🔥</span>
+                <h3>时间黑洞</h3>
+                <p>日均工时中超过 <strong style="color:var(--text-white)">60%</strong> 被消耗在"捞数据、做表格、人肉盯盘"等低价值机械劳动上，真正用于业务思考与团队辅导的时间被严重挤压。</p>
+                <span class="pain-stat">&gt; 350 min / 天</span>
+            </div>
+            <div class="card pain-card">
+                <span class="icon">😵</span>
+                <h3>辅导失焦</h3>
+                <p>1V1 沟通缺少数据抓手，常常沦为"泛泛谈心、打鸡血"。组长无法精准定位坐席能力短板，更难以提供可执行的话术级辅导。</p>
+                <span class="pain-stat">165 min / 天 低效投入</span>
+            </div>
+            <div class="card pain-card">
+                <span class="icon">📉</span>
+                <h3>决策滞后</h3>
+                <p>问题发现严重依赖夕会复盘，而非实时感知。当异常数据出现在报表上时，最佳干预窗口往往已经关闭，组长被迫陷入"事后救火"的被动循环。</p>
+                <span class="pain-stat">T+1 响应</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================== 02 WHAT =================== -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-number">02 / WHAT — 量化收益账本</span>
+            <h2 class="section-title">总工时未减，但管理带宽正在"结构性迁徙"</h2>
+            <p class="section-lead">这是本报告最核心的洞察：引入 PAone 后，组长总工时 <strong style="color:var(--accent-cyan)">并没有减少</strong>。真正发生的是 —— 时间从"机械劳动"迁徙到了"高价值辅导"，一次管理带宽的彻底重分配。</p>
+        </div>
+
+        <div class="bandwidth-overview">
+            <div class="bandwidth-headline">
+                <div class="big-num">585 min <span class="equals">=</span> 585 min</div>
+                <p>旧模式与新模式 <strong>总工时完全相等</strong>，但时间结构发生 <strong>质变</strong>：高价值投入从 28% 提升至 <strong style="color:var(--accent-cyan)">53%</strong></p>
+            </div>
+
+            <div class="bar-row">
+                <div class="bar-label">
+                    <span class="mode">旧模式 · 劳动密集型</span>
+                    <span class="total">Total: 585 min</span>
+                </div>
+                <div class="bar">
+                    <div class="bar-seg seg-p2" style="flex: 30">碎片巡视 30</div>
+                    <div class="bar-seg seg-p1" style="flex: 155">数据盘点 155</div>
+                    <div class="bar-seg seg-p0" style="flex: 165">核心辅导 165</div>
+                    <div class="bar-seg seg-etc" style="flex: 235">会议协同 235</div>
+                </div>
+            </div>
+
+            <div class="bar-row">
+                <div class="bar-label">
+                    <span class="mode">新模式 · 数智驱动型</span>
+                    <span class="total">Total: 585 min</span>
+                </div>
+                <div class="bar">
+                    <div class="bar-seg seg-p2" style="flex: 5">5</div>
+                    <div class="bar-seg seg-p1" style="flex: 35">35</div>
+                    <div class="bar-seg seg-p0" style="flex: 310">核心辅导 310 · 高价值带宽</div>
+                    <div class="bar-seg seg-etc" style="flex: 235">会议协同 235</div>
+                </div>
+            </div>
+
+            <div class="bar-legend">
+                <span><span class="legend-dot" style="background:#ff6a00"></span>碎片巡视（低价值）</span>
+                <span><span class="legend-dot" style="background:#ffb347"></span>数据盘点（机械）</span>
+                <span><span class="legend-dot" style="background:linear-gradient(90deg,#00e5ff,#52c41a)"></span>核心辅导（钻石区）</span>
+                <span><span class="legend-dot" style="background:rgba(136,146,176,0.5)"></span>会议协同（中性）</span>
+            </div>
+        </div>
+
+        <div class="data-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 26%">管理模块</th>
+                        <th>旧模式耗时</th>
+                        <th>新模式耗时</th>
+                        <th>效能变化</th>
+                        <th>带宽流向与价值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight-row">
+                        <td><span class="priority-tag p-high">L3 钻石</span><strong>核心干预与 1V1 辅导</strong></td>
+                        <td><span class="time-tag tag-old">165 min</span></td>
+                        <td><span class="time-tag tag-new">310 min</span></td>
+                        <td class="change-rate up">▲ +87.8%</td>
+                        <td><strong style="color:var(--text-white)">核心投向：</strong>从"泛泛谈心"跃升为"数据驱动的精准赋能"。</td>
+                    </tr>
+                    <tr>
+                        <td><span class="priority-tag p-mid">L2 中性</span><strong>会议管理与组织协同</strong></td>
+                        <td><span class="time-tag tag-old">235 min</span></td>
+                        <td><span class="time-tag tag-new">235 min</span></td>
+                        <td class="change-rate flat">— 持平</td>
+                        <td>时长不变，但决策依据从"凭经验拍板"升级为"AI 情报 + 实时看板"。</td>
+                    </tr>
+                    <tr>
+                        <td><span class="priority-tag p-low">L1 机械</span><strong>数据盘点与材料准备</strong></td>
+                        <td><span class="time-tag tag-old">155 min</span></td>
+                        <td><span class="time-tag tag-new">35 min</span></td>
+                        <td class="change-rate down">▼ -77.4%</td>
+                        <td>RPA + AIGC 一键生成早夕会与通报材料，释放机械体力活。</td>
+                    </tr>
+                    <tr>
+                        <td><span class="priority-tag p-low">L1 机械</span><strong>碎片状态巡视</strong></td>
+                        <td><span class="time-tag tag-old">30 min</span></td>
+                        <td><span class="time-tag tag-new">5 min</span></td>
+                        <td class="change-rate down">▼ -83.3%</td>
+                        <td>消灭"人肉盯盘"，规则引擎自动识别异常并主动推单。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- =================== 03 WHO =================== -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-number">03 / WHO — 角色新范式</span>
+            <h2 class="section-title">组长不再是"监工"，而是"数智指挥官"</h2>
+            <p class="section-lead">机械劳动被 PAone 接管 → 管理带宽被释放 → 岗位能力模型被重新定义。组长正在进化为具备数据洞察与 AI 协同能力的三重新角色。</p>
+        </div>
+
+        <div class="transition-arrow">
+            <div class="transition-box trans-old">盯流程的监工</div>
+            <span class="arrow-icon">→</span>
+            <div class="transition-box trans-old">救火的客诉员</div>
+            <span class="arrow-icon">→</span>
+            <div class="transition-box trans-new">数智指挥官 · 微型业务总经理</div>
+        </div>
+
+        <div class="grid-3">
+            <div class="card role-card">
+                <span class="icon">🛡️</span>
+                <span class="label">Emotional Shield</span>
+                <h3>情绪价值终极兜底人</h3>
+                <ul>
+                    <li><strong>不再纠结流程：</strong>AI 已秒级完成查单与核实，组长将精力 100% 投入高风险流失客户的情感挽回。</li>
+                    <li><strong>人性化防波堤：</strong>发挥人类共情力，处理 AI 逻辑之外的复杂客诉，守住服务品牌的最后防线。</li>
+                </ul>
+                <div class="role-kpi">
+                    <span class="role-kpi-label">量化抓手 · KEY ACTION</span>
+                    每周亲自挽回 <strong style="color:var(--accent-cyan)">≥ 3 例</strong> 高风险客户
+                </div>
+            </div>
+
+            <div class="card role-card">
+                <span class="icon">🧠</span>
+                <span class="label">Strategic Analyst</span>
+                <h3>业务策略前线情报官</h3>
+                <ul>
+                    <li><strong>销冠话术萃取：</strong>从 AI 初筛的优质录音中提炼"一枪打透"的实战话术，而非盲目打气。</li>
+                    <li><strong>战术反馈中枢：</strong>分析业绩跳水深层根因，向产品线输送基于 AI 语料洞察的前线情报。</li>
+                </ul>
+                <div class="role-kpi">
+                    <span class="role-kpi-label">量化抓手 · KEY ACTION</span>
+                    每月输出 <strong style="color:var(--accent-cyan)">≥ 1 份</strong> 话术萃取 / 市场情报简报
+                </div>
+            </div>
+
+            <div class="card role-card">
+                <span class="icon">⚡</span>
+                <span class="label">AI Trainer</span>
+                <h3>智能工具首席语料师</h3>
+                <ul>
+                    <li><strong>喂养 AI 大脑：</strong>将实战中的优秀案例与复杂逻辑打标签，训练 PAone 真正"懂业务"。</li>
+                    <li><strong>人机协同进化：</strong>组长是 AI 的教练，通过纠偏与反哺，让工具具备部门专属的管理灵魂。</li>
+                </ul>
+                <div class="role-kpi">
+                    <span class="role-kpi-label">量化抓手 · KEY ACTION</span>
+                    每周向 PAone 标注 <strong style="color:var(--accent-cyan)">≥ 10 条</strong> 优质案例 / 纠偏反馈
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================== 03.5 话术萃取实战（新增） =================== -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-number new">03.5 / PLAYBOOK — 销冠话术萃取实战</span>
+            <h2 class="section-title">拆解一次真实萃取：从"客户说再考虑一下"看组长的情报官价值</h2>
+            <p class="section-lead">角色定义是虚的，样本才是实的。下面这个场景，是组长作为"情报官"每月要做的事情：从 AI 初筛的 100 通优质录音里，萃取出可复制的话术模板，直接反哺团队训练库。</p>
+        </div>
+
+        <div class="script-demo">
+            <div class="script-demo-header">
+                <span class="script-demo-badge">SCENE</span>
+                <h3>客户反馈："我再考虑一下，暂时不太需要"</h3>
+                <div class="scene">出现频次：<strong>日均 37 次</strong> · 行业黑洞级高频场景</div>
+            </div>
+
+            <div class="script-compare">
+                <!-- 普通话术 -->
+                <div class="script-box script-bad">
+                    <span class="script-label label-bad">❌ 普通坐席话术</span>
+                    <p class="script-quote">
+                        "好的王姐，那您有需要随时联系我哈~ 我们的产品真的很好，您可以再了解一下。祝您生活愉快！"
+                    </p>
+                    <div class="script-result">
+                        <span class="result-chip chip-bad">二次触达成功率 12%</span>
+                        <span class="result-chip chip-bad">客户流失率 78%</span>
+                        <span class="result-chip chip-bad">平均挽回周期 &gt; 14 天</span>
+                    </div>
+                </div>
+
+                <!-- 销冠话术 -->
+                <div class="script-box script-good">
+                    <span class="script-label label-good">✓ 销冠话术（AI 萃取后沉淀）</span>
+                    <p class="script-quote">
+                        "王姐，特别理解您这个感受。其实您刚说的'再考虑'，我经手的客户里 90% 最后真正的顾虑都在三件事上 —— <strong>价格、理赔流程、或是保障范围不明确</strong>。我这边有个不占用您太多时间的办法：我直接用您家庭情况帮您模拟一下三种方案的差别，<strong>您看完有兴趣我们再聊，没兴趣这事就过去</strong>，行吗？"
+                    </p>
+                    <div class="script-result">
+                        <span class="result-chip chip-good">二次触达成功率 46%</span>
+                        <span class="result-chip chip-good">挽回转化率 34%</span>
+                        <span class="result-chip chip-good">平均挽回周期 3 天</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="script-takeaway">
+                <strong>📐 萃取心法（组长的情报官产出范式）：</strong>
+                这段话术之所以能复用，不是因为"嘴甜"，而是拆解出了三个可迁移的结构 ——
+                <strong>共情承接</strong>（理解您的感受） +
+                <strong>行业数据锚定</strong>（90% 的客户顾虑在三件事）+
+                <strong>零压力退出承诺</strong>（没兴趣这事就过去）。
+                组长的工作，就是把这种"结构"从销冠身上拆出来，变成 <strong>全团队可套用的模板</strong>。
+            </div>
+        </div>
+    </div>
+
+    <!-- =================== 04 CASE 真实案例（新增） =================== -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-number new">04 / CASE — 真实挽回案例时间轴</span>
+            <h2 class="section-title">一个 6 天的故事：AI 预警 × 组长介入 × 200 万续保逆转</h2>
+            <p class="section-lead">下面这个案例来自试点团队的真实数据（客户信息已脱敏）。它展示了"数智指挥官"模式下，组长和 AI 如何配合，完成一次旧模式下不可能发生的挽回。</p>
+        </div>
+
+        <div class="case-card">
+            <div class="case-header">
+                <div>
+                    <h3 class="case-title">CASE · 李女士续保危机</h3>
+                    <div class="case-subtitle">45 岁 · 高净值客户 · 重疾险即将到期 · 家庭 200 万保额</div>
+                </div>
+                <div class="case-badge">
+                    挽回结果 · 续保 + 加保 340 万
+                    <small>同比旧模式：大概率流失至他司</small>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="tl-row">
+                    <div class="tl-time">T - 3 天</div>
+                    <div><div class="tl-dot"></div></div>
+                    <div class="tl-content">
+                        <div class="tl-actor">PAONE · 行为监测</div>
+                        <div class="tl-desc">监测到李女士 <strong>3 次登录官网保单页</strong>、累计停留 <strong>8 分 47 秒</strong>，但未发起任何操作。同时，竞品官网 cookie 出现在同设备。</div>
+                    </div>
+                </div>
+
+                <div class="tl-row">
+                    <div class="tl-time">T - 2 天</div>
+                    <div><div class="tl-dot"></div></div>
+                    <div class="tl-content">
+                        <div class="tl-actor">PAONE · 规则引擎</div>
+                        <div class="tl-desc">自动打标 <strong>「流失高风险 · 紧急」</strong>，并将该客户 <strong>推单至组长工作台</strong>，而非坐席。系统备注："建议管理层亲自介入"。</div>
+                    </div>
+                </div>
+
+                <div class="tl-row">
+                    <div class="tl-time">T - 1 天</div>
+                    <div><div class="tl-dot"></div></div>
+                    <div class="tl-content">
+                        <div class="tl-actor">组长 · 情报准备</div>
+                        <div class="tl-desc">调阅 AI 生成的客户画像，发现关键线索：<strong>3 个月前曾咨询理赔流程，但坐席回复后未闭环确认。</strong> 组长判断：客户的真实顾虑不是价格，而是对理赔体验的不信任。</div>
+                    </div>
+                </div>
+
+                <div class="tl-row t-zero">
+                    <div class="tl-time">T 0</div>
+                    <div><div class="tl-dot"></div></div>
+                    <div class="tl-content">
+                        <div class="tl-actor">组长 · 亲自致电</div>
+                        <div class="tl-desc">15 分钟通话，<strong>全程不提续费</strong>。只谈三件事：① 主动回溯 3 月的理赔咨询 ② 解释当时流程卡点并正式道歉 ③ 承诺后续专属服务对接。<strong>通话结束时客户已情绪舒缓。</strong></div>
+                    </div>
+                </div>
+
+                <div class="tl-row t-plus">
+                    <div class="tl-time">T + 2 天</div>
+                    <div><div class="tl-dot"></div></div>
+                    <div class="tl-content">
+                        <div class="tl-actor">客户 · 主动回访</div>
+                        <div class="tl-desc">李女士主动来电询问 <strong>续保升级方案</strong>，并提出为丈夫加保。最终签单 <strong>续保 200 万 + 加保 140 万 = 340 万</strong>。</div>
+                    </div>
+                </div>
+
+                <div class="tl-row t-plus">
+                    <div class="tl-time">T + 7 天</div>
+                    <div><div class="tl-dot"></div></div>
+                    <div class="tl-content">
+                        <div class="tl-actor">组长 · AI 喂养闭环</div>
+                        <div class="tl-desc">将本案打标为 <strong>「高净值客户 · 理赔体验型流失」</strong> 喂给 PAone。此后同类客户（登录保单页但未操作 + 有历史理赔咨询未闭环）将被 <strong>自动识别并优先推单</strong>。</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="case-contrast">
+                <div class="contrast-box contrast-old">
+                    <span class="cb-label">❌ 旧模式下的剧本</span>
+                    <p>这个客户会在续保到期后的"流失名单"里出现在夕会上。那时她大概率已签他司。组长的复盘将停留在"唉，又丢一个老客户"的情绪层面，根因永远无法触达。</p>
+                </div>
+                <div class="contrast-box contrast-new">
+                    <span class="cb-label">✓ 数智指挥官模式下</span>
+                    <p>AI 在客户真正流失前 3 天发出预警 → 组长用共情+信息优势完成挽回 → 案例反向训练 AI → 同类客户从此进入"自动识别-管理层优先处理"的闭环。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================== 05 HOW =================== -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-number">05 / HOW — 落地路径</span>
+            <h2 class="section-title">三阶段 90 天，从工具接入到能力升级</h2>
+            <p class="section-lead">蓝图再美也要脚手架。下面的三阶段路径，让"数智化转型"从愿景变为可排期、可验收、可复盘的行动。</p>
+        </div>
+
+        <div class="roadmap">
+            <div class="roadmap-line">
+                <div class="stage">
+                    <div class="stage-dot">01</div>
+                    <h3 class="stage-title">工具接入</h3>
+                    <div class="stage-period">WEEK 1 — 2</div>
+                    <ul class="stage-list">
+                        <li>PAone 账号与权限开通，接入团队数据源</li>
+                        <li>规则引擎配置：异常推单阈值 / 通报口径</li>
+                        <li>组长完成工具基础培训与首次诊断</li>
+                    </ul>
+                </div>
+                <div class="stage">
+                    <div class="stage-dot">02</div>
+                    <h3 class="stage-title">流程重塑</h3>
+                    <div class="stage-period">WEEK 3 — 8</div>
+                    <ul class="stage-list">
+                        <li>废除人肉巡视、手工取数等旧 SOP</li>
+                        <li>建立"AI 初筛 + 组长精辅导"的 1V1 新机制</li>
+                        <li>夕会改造：从汇报型转向数据驱动决策型</li>
+                    </ul>
+                </div>
+                <div class="stage">
+                    <div class="stage-dot">03</div>
+                    <h3 class="stage-title">能力升级</h3>
+                    <div class="stage-period">WEEK 9 — 12</div>
+                    <ul class="stage-list">
+                        <li>组长完成三种新角色能力认证</li>
+                        <li>建立 AI 语料喂养日常机制</li>
+                        <li>输出首份《团队数智化复盘报告》</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================== 06 RESULT + 对标 =================== -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-number">06 / RESULT — 预期业绩与行业对标</span>
+            <h2 class="section-title">不止是"改善"，而是站在行业前列</h2>
+            <p class="section-lead">所有转型最终都要回答一个问题 —— "然后呢？"下列指标作为数智化转型的业绩锚点，并配套 <strong style="color:var(--accent-cyan)">行业基准</strong>，让每一个数字都经得起追问。</p>
+        </div>
+
+        <div class="grid-4">
+            <div class="card kpi-card">
+                <span class="kpi-icon">🎯</span>
+                <div class="kpi-label">高价值时间占比</div>
+                <div class="kpi-value">53<span class="unit">%</span></div>
+                <div class="kpi-desc">从 28% 提升至 53%，钻石区带宽翻倍</div>
+            </div>
+            <div class="card kpi-card">
+                <span class="kpi-icon">💎</span>
+                <div class="kpi-label">高风险客户挽回率</div>
+                <div class="kpi-value">+25<span class="unit">%</span></div>
+                <div class="kpi-desc">组长情感介入 + AI 识别预警前置</div>
+            </div>
+            <div class="card kpi-card">
+                <span class="kpi-icon">📚</span>
+                <div class="kpi-label">销冠话术复用率</div>
+                <div class="kpi-value">+40<span class="unit">%</span></div>
+                <div class="kpi-desc">月度话术萃取输入团队训练库</div>
+            </div>
+            <div class="card kpi-card">
+                <span class="kpi-icon">⏱️</span>
+                <div class="kpi-label">异常响应时效</div>
+                <div class="kpi-value">T+0</div>
+                <div class="kpi-desc">从 T+1 复盘式响应转为实时推单</div>
+            </div>
+        </div>
+
+        <!-- 行业对标（新增） -->
+        <div class="benchmark-card">
+            <h3>📊 横向对标：我们相对行业的位置</h3>
+            <p class="bm-lead">数据来源：金融保险业服销运营基准报告 · 行业平均为呼入/服销混合型团队中位数</p>
+
+            <div class="bm-row">
+                <div class="bm-label"><span>高价值时间占比</span><strong>超出行业中位数 2.4 倍</strong></div>
+                <div class="bm-tracks">
+                    <div class="bm-track">
+                        <div class="bm-track-name">行业底部 25%</div>
+                        <div class="bm-track-bar"><div class="bm-track-fill fill-industry-low" style="width: 22%">15%</div></div>
+                        <div class="bm-track-value">15%</div>
+                    </div>
+                    <div class="bm-track">
+                        <div class="bm-track-name">行业中位数</div>
+                        <div class="bm-track-bar"><div class="bm-track-fill fill-industry-avg" style="width: 32%">22%</div></div>
+                        <div class="bm-track-value">22%</div>
+                    </div>
+                    <div class="bm-track">
+                        <div class="bm-track-name us">PAone 模式</div>
+                        <div class="bm-track-bar"><div class="bm-track-fill fill-us" style="width: 76%">53%</div></div>
+                        <div class="bm-track-value us">53%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bm-row">
+                <div class="bm-label"><span>销冠话术复用率</span><strong>领先行业均值 3.3 倍</strong></div>
+                <div class="bm-tracks">
+                    <div class="bm-track">
+                        <div class="bm-track-name">行业底部 25%</div>
+                        <div class="bm-track-bar"><div class="bm-track-fill fill-industry-low" style="width: 8%">5%</div></div>
+                        <div class="bm-track-value">5%</div>
+                    </div>
+                    <div class="bm-track">
+                        <div class="bm-track-name">行业中位数</div>
+                        <div class="bm-track-bar"><div class="bm-track-fill fill-industry-avg" style="width: 18%">12%</div></div>
+                        <div class="bm-track-value">12%</div>
+                    </div>
+                    <div class="bm-track">
+                        <div class="bm-track-name us">PAone 模式</div>
+                        <div class="bm-track-bar"><div class="bm-track-fill fill-us" style="width: 58%">40%</div></div>
+                        <div class="bm-track-value us">40%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bm-row">
+                <div class="bm-label"><span>异常响应时效（小时）· 越短越好</span><strong>从 T+1 级压缩至分钟级</strong></div>
+                <div class="bm-tracks">
+                    <div class="bm-track">
+                        <div class="bm-track-name">行业底部 25%</div>
+                        <div class="bm-track-bar"><div class="bm-track-fill fill-industry-low" style="width: 90%">48 小时</div></div>
+                        <div class="bm-track-value">48h</div>
+                    </div>
+                    <div class="bm-track">
+                        <div class="bm-track-name">行业中位数</div>
+                        <div class="bm-track-bar"><div class="bm-track-fill fill-industry-avg" style="width: 45%">24 小时</div></div>
+                        <div class="bm-track-value">24h</div>
+                    </div>
+                    <div class="bm-track">
+                        <div class="bm-track-name us">PAone 模式</div>
+                        <div class="bm-track-bar"><div class="bm-track-fill fill-us" style="width: 4%">&lt; 0.5h</div></div>
+                        <div class="bm-track-value us">&lt;0.5h</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================== ROI（新增） =================== -->
+    <div class="section">
+        <div class="section-header">
+            <span class="section-number new">07 / ROI — 投入产出比</span>
+            <h2 class="section-title">给高管的一张账：6 个月回本，远快于行业 18 个月均值</h2>
+            <p class="section-lead">数智化项目最常被问的问题是 —— "这笔投入值不值？"下面是一个标准中等规模团队（20 坐席 + 1 组长）的 12 个月 ROI 测算。</p>
+        </div>
+
+        <div class="roi-section">
+            <div class="roi-left">
+                <h3>12 个月净收益</h3>
+                <div class="big">+<span class="highlight">312</span> 万</div>
+                <p>对比传统数智化项目 <strong style="color:var(--text-white)">18 个月回本周期</strong>，PAone 模式凭借低部署成本与即时业绩放大效应，<strong style="color:var(--accent-gold)">6 个月即可回本</strong>。</p>
+            </div>
+
+            <div class="roi-right">
+                <div class="roi-row">
+                    <div class="roi-row-label">工具部署 + 年订阅费</div>
+                    <div class="roi-row-value">- 48 万</div>
+                </div>
+                <div class="roi-row">
+                    <div class="roi-row-label">组长 + 坐席培训成本</div>
+                    <div class="roi-row-value">- 15 万</div>
+                </div>
+                <div class="roi-row positive">
+                    <div class="roi-row-label">高风险客户挽回增量（+25%）</div>
+                    <div class="roi-row-value">+ 180 万</div>
+                </div>
+                <div class="roi-row positive">
+                    <div class="roi-row-label">话术复用带来转化率提升</div>
+                    <div class="roi-row-value">+ 125 万</div>
+                </div>
+                <div class="roi-row positive">
+                    <div class="roi-row-label">组长带宽释放（机会成本）</div>
+                    <div class="roi-row-value">+ 70 万</div>
+                </div>
+                <div class="roi-row total">
+                    <div class="roi-row-label">12 个月净收益</div>
+                    <div class="roi-row-value">+ 312 万</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================== FOOTER =================== -->
+    <div class="footer-banner">
+        <div class="quote-mark">"</div>
+        <p>引入 PAone 之后，现管岗位不仅是减负，更是 <strong>从"管事"向"理人"的质变</strong>。<br>
+        组长不再是"管 10 个人的监工"，而是 <span class="orange-accent">指挥 10 人 + 1 个 AI 军团</span> 的 <strong>微型业务总经理</strong>。</p>
+        <div class="footer-sign">— V2 · REAL CASES · REAL BENCHMARKS · REAL ROI —</div>
+    </div>
+
+</div>
+
+</body>
+</html>
