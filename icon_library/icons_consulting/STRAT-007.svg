@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="#2D3748"><title>STRAT-007 三层增长曲线 / ThreeHorizons</title><path d="M 2 21 C 6 21 9 18 11 12 C 13 6 14 5 16 5"/><path d="M 6 21 C 10 21 13 17 15 11 C 17 5 19 4 21 4"/><polygon points="2,21.7 5.5,21.7 5.5,20.3 2,20.3"/><polygon points="6,21.7 9.5,21.7 9.5,20.3 6,20.3"/><polygon points="10,21.7 21,21.7 21,20.3 10,20.3"/><ellipse cx="11" cy="12" rx="1" ry="1"/><ellipse cx="15" cy="11" rx="1" ry="1"/><ellipse cx="19" cy="5" rx="1" ry="1"/></svg>
