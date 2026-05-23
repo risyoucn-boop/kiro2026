@@ -129,6 +129,30 @@ COLORS = {
     "警示红": "#C0392B",  # 警示色
 }
 
+# 图标风格:
+#   "filled-rounded" - 实心圆角(原版)
+#   "outline-rounded" - 线框圆角,改色只染线条,中间留白(默认)
+STYLE = "outline-rounded"
+
+
+def transform_id(icon_id: str, style: str = STYLE) -> str:
+    """根据 STYLE 把基础 iconify_id 变换成对应风格的 id。
+
+    例:
+      home-rounded   --(outline-rounded)-->  home-outline-rounded
+      pie-chart      --(outline-rounded)-->  pie-chart-outline
+    缺失变体由 render.py 的 fallback 链处理。
+    """
+    if style == "filled-rounded":
+        return icon_id
+    if style != "outline-rounded":
+        return icon_id
+    prefix, name = icon_id.split(":", 1)
+    if name.endswith("-rounded"):
+        base = name[: -len("-rounded")]
+        return f"{prefix}:{base}-outline-rounded"
+    return f"{prefix}:{name}-outline"
+
 if __name__ == "__main__":
     from collections import Counter
     print(f"总数: {len(ICONS)}")
