@@ -124,12 +124,17 @@ def fetch_svg_bodies() -> Dict[str, Tuple[str, int, int]]:
 
 
 def wrap_svg(body: str, w: int, h: int, color: str) -> str:
-    """把 Iconify body 包装为完整 SVG,fill 全部替换为目标色。"""
-    body_colored = body.replace("currentColor", color)
+    """把 Iconify body 包装为完整 SVG。
+
+    关键: 保留 body 里的 `currentColor` 不替换,只在外层 <svg> 上设置
+    `color="HEX"`。SVG 渲染时 `currentColor` 会解析为外层 color 值,
+    所以默认显示目标色;同时 PPT/Word 的「图形填充」按钮能直接改色,
+    因为 path 的 fill 仍然是 currentColor 这种"可继承色"。
+    """
     return (
         f'<svg xmlns="http://www.w3.org/2000/svg" '
         f'viewBox="0 0 {w} {h}" width="{PNG_SIZE}" height="{PNG_SIZE}" '
-        f'color="{color}" fill="{color}">{body_colored}</svg>'
+        f'color="{color}" fill="currentColor">{body}</svg>'
     )
 
 

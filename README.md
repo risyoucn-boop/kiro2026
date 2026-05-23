@@ -27,24 +27,43 @@
 PowerPoint 2016+ / Word 2016+ / Notion / Figma / Sketch 都原生支持 SVG。
 
 ```text
-assets/svg/blue/01_首页.svg     # 深蓝灰
-assets/svg/orange/01_首页.svg   # 品牌橙
-assets/svg/red/01_首页.svg      # 警示红
+assets/svg/blue/01_首页.svg     # 默认深蓝灰
+assets/svg/orange/01_首页.svg   # 默认品牌橙
+assets/svg/red/01_首页.svg      # 默认警示红
 ```
 
-直接把 SVG 文件拖到 PPT 幻灯片里,**不会有方框**。在 PPT 里右键 → 转换为形状,可以无损改色、放大不糊。
+直接把 SVG 文件拖到 PPT 幻灯片里,**不会有方框**。
 
-### 2. 已经做好的 PPTX(打开就能用)
+### 2. 在 PowerPoint 里改色(逐步)
 
-打开 `assets/icon_library.pptx`,每个图标都是**矢量**:
-- 选中图标 → 右键 → 图片格式 → 颜色 → 重新着色,可以一键改色
-- 放大不会糊
-- 老版 PowerPoint / WPS 自动用 PNG 兜底,显示正常但不能矢量改色
+SVG 里的 path 用的是 `currentColor`(色继承式),PowerPoint 2016+ 可以**一键换任意色**:
 
-### 3. Excel 速查表
+| 步骤 | 操作 |
+| --- | --- |
+| 1 | 选中 SVG 图标 |
+| 2 | 上方菜单出现 **「图形格式」** 标签(英文 Graphics Format) |
+| 3 | 点 **「图形填充」** → 选任意颜色 |
 
-打开 `assets/icon_library.xlsx`,每行有图标的三色缩略图 + 中文名 + Iconify ID。
-找到要的图标,记下 Iconify ID,再去 `assets/svg/{颜色}/` 找对应文件用。
+如果上面的方法没生效,换这条路:
+| 步骤 | 操作 |
+| --- | --- |
+| 1 | 选中图标 |
+| 2 | 右键 → **「转换为形状」**(Convert to Shape) |
+| 3 | 现在是普通形状,右键 → 设置形状格式 → 填充改色 |
+
+### 3. WPS 用户
+
+WPS 对 SVG 改色支持有限。建议:
+- 直接用对应颜色的 SVG 文件(`assets/svg/blue/`、`orange/`、`red/`)
+- 或者在 WPS 里:插入 → 图片 → 选 SVG → 右键 → 设置对象格式 → 颜色
+
+### 4. Word 改色
+
+Word 2016+:选中 SVG → 「图形格式」 → 「图形填充」,同 PowerPoint。
+
+### 5. 已经做好的 PPTX(打开就能用)
+
+打开 `assets/icon_library.pptx`,12 页里每个图标都是矢量,用上面方法 2 即可改色。
 
 ## 设计要点
 
