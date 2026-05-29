@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 200" width="360" height="200">
+  <!-- Step 1: Setup -->
+  <rect x="10" y="50" width="90" height="100" rx="14" fill="#4DD0E1" stroke="#16213E" stroke-width="4"/>
+  <text x="55" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#16213E">设定</text>
+  <circle cx="55" cy="115" r="14" fill="#FFC857" stroke="#16213E" stroke-width="3"/>
+  <text x="55" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#16213E">?</text>
+  <!-- Arrow 1 -->
+  <path d="M105 100 L130 100" stroke="#16213E" stroke-width="4" stroke-linecap="round"/>
+  <path d="M125 95 L132 100 L125 105" fill="none" stroke="#16213E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Step 2: Inference -->
+  <rect x="135" y="50" width="90" height="100" rx="14" fill="#FFC857" stroke="#16213E" stroke-width="4"/>
+  <text x="180" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#16213E">推演</text>
+  <path d="M165 110 L195 110 M180 105 L180 130" stroke="#16213E" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="170" cy="125" r="3" fill="#16213E"/>
+  <circle cx="190" cy="125" r="3" fill="#16213E"/>
+  <!-- Arrow 2 -->
+  <path d="M230 100 L255 100" stroke="#16213E" stroke-width="4" stroke-linecap="round"/>
+  <path d="M250 95 L257 100 L250 105" fill="none" stroke="#16213E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Step 3: Choice -->
+  <rect x="260" y="50" width="90" height="100" rx="14" fill="#7ED957" stroke="#16213E" stroke-width="4"/>
+  <text x="305" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#16213E">选择</text>
+  <path d="M285 115 L295 105 L295 125 Z" fill="#FF6B6B" stroke="#16213E" stroke-width="2"/>
+  <path d="M325 115 L315 105 L315 125 Z" fill="#5B4B8A" stroke="#16213E" stroke-width="2"/>
+  <!-- Sparkles -->
+  <text x="180" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#5B4B8A">如果……会怎样……那人怎么办？</text>
+</svg>

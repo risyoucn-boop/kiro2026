@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="rocketBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F8FAFF"/>
+      <stop offset="1" stop-color="#C7D5FF"/>
+    </linearGradient>
+    <linearGradient id="rocketFlame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFC857"/>
+      <stop offset="1" stop-color="#FF6B6B"/>
+    </linearGradient>
+  </defs>
+  <!-- Stars -->
+  <circle cx="30" cy="40" r="2" fill="#FFC857"/>
+  <circle cx="170" cy="60" r="2.5" fill="#4DD0E1"/>
+  <circle cx="40" cy="160" r="2" fill="#FFFFFF"/>
+  <circle cx="165" cy="150" r="2" fill="#FFC857"/>
+  <!-- Flame -->
+  <path d="M85 160 Q100 200 115 160 Q110 175 100 175 Q90 175 85 160 Z" fill="url(#rocketFlame)"/>
+  <path d="M92 160 Q100 185 108 160 Q104 172 100 172 Q96 172 92 160 Z" fill="#FFFFFF" opacity="0.8"/>
+  <!-- Body -->
+  <path d="M100 20 Q130 60 130 110 L130 160 L70 160 L70 110 Q70 60 100 20 Z" fill="url(#rocketBody)" stroke="#16213E" stroke-width="3"/>
+  <!-- Window -->
+  <circle cx="100" cy="80" r="16" fill="#4DD0E1" stroke="#16213E" stroke-width="3"/>
+  <circle cx="95" cy="75" r="5" fill="#F8FAFF" opacity="0.8"/>
+  <!-- Fins -->
+  <path d="M70 120 L50 160 L70 160 Z" fill="#FF6B6B" stroke="#16213E" stroke-width="3"/>
+  <path d="M130 120 L150 160 L130 160 Z" fill="#FF6B6B" stroke="#16213E" stroke-width="3"/>
+  <!-- Bottom band -->
+  <rect x="70" y="150" width="60" height="10" fill="#FFC857" stroke="#16213E" stroke-width="3"/>
+</svg>

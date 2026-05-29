@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Head silhouette -->
+  <path d="M60 110 Q55 70 100 60 Q140 55 145 95 Q150 110 140 125 L140 150 L130 150 L130 165 L80 165 L80 150 L70 150 Q60 130 60 110 Z"
+        fill="#FFC857" stroke="#16213E" stroke-width="4"/>
+  <!-- Brain -->
+  <path d="M75 95 Q70 80 85 78 Q90 70 100 75 Q110 70 115 78 Q130 80 125 95 Q130 110 115 110 Q108 118 100 112 Q92 118 85 110 Q70 110 75 95 Z"
+        fill="#FF6B6B" stroke="#16213E" stroke-width="3"/>
+  <!-- Brain folds -->
+  <path d="M85 88 Q90 92 90 100" fill="none" stroke="#16213E" stroke-width="2"/>
+  <path d="M115 88 Q110 92 110 100" fill="none" stroke="#16213E" stroke-width="2"/>
+  <line x1="100" y1="78" x2="100" y2="108" stroke="#16213E" stroke-width="2"/>
+  <!-- Chip on head -->
+  <rect x="92" y="58" width="16" height="10" rx="2" fill="#4DD0E1" stroke="#16213E" stroke-width="2"/>
+  <line x1="100" y1="50" x2="100" y2="58" stroke="#16213E" stroke-width="2"/>
+  <circle cx="100" cy="48" r="3" fill="#7ED957" stroke="#16213E" stroke-width="2"/>
+  <!-- Signal waves -->
+  <path d="M30 70 Q40 60 50 70" fill="none" stroke="#4DD0E1" stroke-width="3" stroke-linecap="round"/>
+  <path d="M25 80 Q40 65 55 80" fill="none" stroke="#4DD0E1" stroke-width="3" stroke-linecap="round"/>
+  <path d="M150 70 Q160 60 170 70" fill="none" stroke="#4DD0E1" stroke-width="3" stroke-linecap="round"/>
+  <path d="M145 80 Q160 65 175 80" fill="none" stroke="#4DD0E1" stroke-width="3" stroke-linecap="round"/>
+</svg>
