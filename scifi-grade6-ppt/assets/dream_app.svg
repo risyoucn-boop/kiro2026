@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Phone -->
+  <rect x="55" y="20" width="90" height="160" rx="16" fill="#16213E" stroke="#16213E" stroke-width="4"/>
+  <rect x="62" y="32" width="76" height="136" rx="6" fill="#5B4B8A"/>
+  <!-- Speaker -->
+  <rect x="88" y="25" width="24" height="3" rx="1" fill="#4DD0E1"/>
+  <!-- Stars -->
+  <path d="M75 60 L78 68 L86 70 L78 72 L75 80 L72 72 L64 70 L72 68 Z" fill="#FFC857"/>
+  <path d="M125 90 L128 98 L136 100 L128 102 L125 110 L122 102 L114 100 L122 98 Z" fill="#F8FAFF"/>
+  <path d="M85 130 L87 136 L93 138 L87 140 L85 146 L83 140 L77 138 L83 136 Z" fill="#7ED957"/>
+  <!-- Moon -->
+  <path d="M118 50 Q108 50 108 65 Q108 80 122 80 Q116 75 116 65 Q116 55 122 52 Q120 50 118 50 Z" fill="#FFC857" stroke="#16213E" stroke-width="2"/>
+  <!-- ZZZ -->
+  <text x="100" y="160" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#FFC857">Zzz</text>
+  <!-- Home button -->
+  <circle cx="100" cy="175" r="3" fill="#4DD0E1"/>
+</svg>

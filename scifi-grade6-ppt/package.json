@@ -1,0 +1,24 @@
+{
+  "name": "scifi-grade6-ppt",
+  "version": "1.0.0",
+  "description": "Generate a sci-fi sharing PPT for grade-6 students using PptxGenJS.",
+  "main": "generate_scifi_grade6_ppt.js",
+  "scripts": {
+    "build": "node generate_scifi_grade6_ppt.js",
+    "clean": "node -e \"const fs=require('fs');const p='output/science_fiction_adventure_grade6.pptx';if(fs.existsSync(p)){fs.unlinkSync(p);console.log('removed',p);}else{console.log('nothing to clean');}\"",
+    "rebuild": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "pptx",
+    "pptxgenjs",
+    "education",
+    "grade6",
+    "science-fiction"
+  ],
+  "author": "Kiro",
+  "license": "MIT",
+  "dependencies": {
+    "pptxgenjs": "^3.12.0",
+    "sharp": "^0.34.5"
+  }
+}

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="planetGrad" cx="0.4" cy="0.4" r="0.7">
+      <stop offset="0" stop-color="#7ED957"/>
+      <stop offset="1" stop-color="#4DD0E1"/>
+    </radialGradient>
+  </defs>
+  <!-- Ring back -->
+  <ellipse cx="100" cy="110" rx="90" ry="20" fill="none" stroke="#FFC857" stroke-width="6" opacity="0.9"/>
+  <!-- Planet -->
+  <circle cx="100" cy="100" r="55" fill="url(#planetGrad)" stroke="#16213E" stroke-width="3"/>
+  <!-- Continents -->
+  <path d="M70 90 Q85 85 95 95 Q90 110 75 108 Z" fill="#7ED957" opacity="0.9"/>
+  <path d="M115 105 Q130 100 135 115 Q125 125 115 120 Z" fill="#7ED957" opacity="0.9"/>
+  <!-- Highlight -->
+  <ellipse cx="85" cy="80" rx="14" ry="6" fill="#FFFFFF" opacity="0.4"/>
+  <!-- Ring front -->
+  <path d="M10 110 Q100 140 190 110" fill="none" stroke="#FFC857" stroke-width="6"/>
+</svg>

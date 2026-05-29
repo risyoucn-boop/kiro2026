@@ -1,0 +1,4 @@
+node_modules/
+assets/.png_cache/
+*.log
+.DS_Store

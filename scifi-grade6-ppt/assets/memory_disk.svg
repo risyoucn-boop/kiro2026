@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Cloud -->
+  <path d="M40 110 Q30 90 50 85 Q55 65 80 70 Q95 50 120 65 Q145 60 150 85 Q170 90 160 110 Z"
+        fill="#F8FAFF" stroke="#16213E" stroke-width="4"/>
+  <!-- USB body -->
+  <rect x="80" y="115" width="50" height="60" rx="6" fill="#5B4B8A" stroke="#16213E" stroke-width="4"/>
+  <!-- USB metal tip -->
+  <rect x="90" y="100" width="30" height="20" rx="3" fill="#C0C0C0" stroke="#16213E" stroke-width="3"/>
+  <rect x="95" y="105" width="6" height="10" fill="#16213E"/>
+  <rect x="109" y="105" width="6" height="10" fill="#16213E"/>
+  <!-- Label on cloud -->
+  <text x="100" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#5B4B8A">MEM</text>
+  <!-- Indicator -->
+  <circle cx="105" cy="140" r="4" fill="#7ED957"/>
+  <rect x="90" y="155" width="30" height="4" rx="2" fill="#4DD0E1"/>
+</svg>
