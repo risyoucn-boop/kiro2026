@@ -18,6 +18,7 @@ synapse-ipc.workspace = true
 synapse-config.workspace = true
 synapse-core.workspace = true
 synapse-asr.workspace = true
+synapse-polish.workspace = true
 
 tokio.workspace = true
 tokio-stream.workspace = true
@@ -34,3 +35,5 @@ tower = { version = "0.5", features = ["util"] }
 hyper-util = { version = "0.1", features = ["tokio"] }
 tokio-tungstenite.workspace = true
 futures-util.workspace = true
+wiremock = "0.6"
+serde_json.workspace = true

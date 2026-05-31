@@ -35,6 +35,9 @@ protoc-bin-vendored = "3"
 tokio-tungstenite = { version = "0.24", features = ["rustls-tls-native-roots"] }
 futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
 
+# HTTP (Polish provider, OpenAI-compatible APIs)
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls-native-roots", "json"] }
+
 # JSON for our streaming ASR control protocol
 serde_json = "1"
 url = "2"

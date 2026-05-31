@@ -17,19 +17,29 @@ use synapse_ipc::v0::{
     AudioFrame, PushAudioAck, SessionEvent, StartSessionRequest, StopSessionRequest,
     StopSessionResponse,
 };
+use synapse_polish::PolishProvider;
 
 use crate::session::{build_pipes, drive, SessionRegistry};
 
 #[derive(Debug)]
 pub struct FrontendService {
     provider: Arc<dyn AsrProvider>,
+    polish: Option<Arc<dyn PolishProvider>>,
     registry: Arc<SessionRegistry>,
 }
 
 impl FrontendService {
     pub fn new(provider: Arc<dyn AsrProvider>) -> Self {
+        Self::with_polish(provider, None)
+    }
+
+    pub fn with_polish(
+        provider: Arc<dyn AsrProvider>,
+        polish: Option<Arc<dyn PolishProvider>>,
+    ) -> Self {
         Self {
             provider,
+            polish,
             registry: Arc::new(SessionRegistry::default()),
         }
     }
@@ -61,12 +71,14 @@ impl SynapseFrontend for FrontendService {
             .await;
 
         let provider = self.provider.clone();
+        let polish = self.polish.clone();
         let registry = self.registry.clone();
         let session_id_for_task = id.clone();
         tokio::spawn(async move {
             drive(
                 session_id_for_task.clone(),
                 provider,
+                polish,
                 pipes.grpc_audio_rx,
                 pipes.grpc_events_tx,
             )

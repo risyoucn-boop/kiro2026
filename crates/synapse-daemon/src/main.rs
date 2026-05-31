@@ -14,6 +14,71 @@ use synapse_asr::streaming::{AuthMode, StreamingAsrProvider, StreamingProviderCo
 use synapse_asr::AsrProvider;
 use synapse_daemon::service::FrontendService;
 use synapse_ipc::v0::synapse_frontend_server::SynapseFrontendServer;
+use synapse_polish::qwen::{QwenConfig, QwenPolishProvider};
+use synapse_polish::PolishProvider;
+
+/// Pick the Polish (LLM post-processing) provider, or `None` for raw-only.
+///
+/// Selection precedence:
+///
+/// 1. `SYNAPSE_POLISH_PROVIDER=none` — explicitly disabled.
+/// 2. `SYNAPSE_POLISH_PROVIDER=qwen` — Qwen-Flash / OpenAI-compatible.
+/// 3. If `SYNAPSE_POLISH_API_KEY` and `SYNAPSE_POLISH_ENDPOINT` are both set,
+///    use `qwen`.
+/// 4. Otherwise: `None` (no polish; daemon emits raw ASR results).
+///
+/// `qwen` env vars:
+///   - `SYNAPSE_POLISH_ENDPOINT=...` (required, full chat completions URL)
+///   - `SYNAPSE_POLISH_API_KEY=...` (required, Bearer token)
+///   - `SYNAPSE_POLISH_MODEL=...` (optional, default `qwen-flash`)
+fn pick_polish_provider() -> Option<Arc<dyn PolishProvider>> {
+    let kind = std::env::var("SYNAPSE_POLISH_PROVIDER")
+        .ok()
+        .filter(|s| !s.is_empty())
+        .unwrap_or_else(|| {
+            if env_nonempty("SYNAPSE_POLISH_API_KEY") && env_nonempty("SYNAPSE_POLISH_ENDPOINT") {
+                "qwen".into()
+            } else {
+                "none".into()
+            }
+        });
+
+    match kind.as_str() {
+        "none" => None,
+        "qwen" => {
+            let endpoint = std::env::var("SYNAPSE_POLISH_ENDPOINT")
+                .ok()
+                .unwrap_or_default();
+            let api_key = std::env::var("SYNAPSE_POLISH_API_KEY")
+                .ok()
+                .unwrap_or_default();
+            let model = std::env::var("SYNAPSE_POLISH_MODEL")
+                .ok()
+                .filter(|s| !s.is_empty())
+                .unwrap_or_else(|| "qwen-flash".into());
+            if endpoint.is_empty() || api_key.is_empty() {
+                tracing::error!(
+                    "SYNAPSE_POLISH_PROVIDER=qwen requires SYNAPSE_POLISH_ENDPOINT and SYNAPSE_POLISH_API_KEY"
+                );
+                return None;
+            }
+            Some(Arc::new(QwenPolishProvider::new(QwenConfig::new(
+                endpoint, api_key, model,
+            ))))
+        }
+        other => {
+            tracing::warn!(
+                provider = other,
+                "unknown SYNAPSE_POLISH_PROVIDER, falling back to none"
+            );
+            None
+        }
+    }
+}
+
+fn env_nonempty(name: &str) -> bool {
+    std::env::var(name).map(|s| !s.is_empty()).unwrap_or(false)
+}
 
 /// Pick the ASR provider based on env vars. Defaults to the deterministic
 /// Mock provider so first-run users without any config still get a working
@@ -94,10 +159,6 @@ fn pick_provider() -> Arc<dyn AsrProvider> {
     }
 }
 
-fn env_nonempty(name: &str) -> bool {
-    std::env::var(name).map(|s| !s.is_empty()).unwrap_or(false)
-}
-
 #[tokio::main]
 async fn main() -> Result<()> {
     init_tracing();
@@ -115,13 +176,15 @@ async fn main() -> Result<()> {
     set_socket_perms_0600(&socket_path)?;
 
     let provider = pick_provider();
+    let polish = pick_polish_provider();
     tracing::info!(
         socket = %socket_path.display(),
         asr_provider = provider.name(),
+        polish_provider = polish.as_ref().map(|p| p.name()).unwrap_or("none"),
         "synapsed ready"
     );
 
-    let frontend = FrontendService::new(provider);
+    let frontend = FrontendService::with_polish(provider, polish);
 
     Server::builder()
         .add_service(SynapseFrontendServer::new(frontend))

@@ -13,6 +13,7 @@ use std::time::Duration;
 use thiserror::Error;
 
 pub mod audit;
+pub mod qwen;
 
 #[derive(Debug, Error)]
 pub enum PolishError {
@@ -40,7 +41,7 @@ pub struct UserCorrection {
 }
 
 #[async_trait]
-pub trait PolishProvider: Send + Sync {
+pub trait PolishProvider: Send + Sync + std::fmt::Debug {
     fn name(&self) -> &'static str;
     async fn polish(&self, req: PolishRequest, budget: Duration) -> Result<String, PolishError>;
 }

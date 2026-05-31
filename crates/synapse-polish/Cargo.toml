@@ -10,3 +10,14 @@ anyhow.workspace = true
 thiserror.workspace = true
 async-trait.workspace = true
 synapse-lexicon.workspace = true
+
+# Qwen / OpenAI-compatible HTTP provider
+tokio = { workspace = true, features = ["sync", "time", "rt", "macros"] }
+reqwest.workspace = true
+serde = { workspace = true }
+serde_json.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["sync", "time", "rt", "macros", "test-util", "net"] }
+wiremock = "0.6"

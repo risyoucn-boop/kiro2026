@@ -6,15 +6,18 @@
 //! 2. Pumps audio frames received over gRPC into the provider's `audio_tx`.
 //! 3. Translates `AsrEvent`s coming back on `events_rx` into the v0
 //!    `SessionEvent` IPC envelope and forwards them to the gRPC client.
-//! 4. Runs the [`synapse_core::Session`] FSM in lock-step so we always
+//! 4. On `AsrEvent::Final`, optionally calls the configured `PolishProvider`
+//!    with the budget from PRD §6 (default 600ms). Polish is best-effort:
+//!    on timeout / audit reject / provider error, the raw transcript is
+//!    used and the session continues normally (logged but not fatal).
+//! 5. Runs the [`synapse_core::Session`] FSM in lock-step so we always
 //!    have an authoritative state for telemetry and debugging.
 //!
-//! Polish / billing / lexicon are NOT wired in yet — those land in M2 / M3.
-//! The current `drive` synthesises a `PolishSkipped` transition right after
-//! every `AsrEvent::Final` so the FSM walks the full happy path.
+//! Billing / lexicon plumbing remains TODO for M3 / M2.5.
 
 use std::collections::HashMap;
 use std::sync::Arc;
+use std::time::Duration;
 
 use tokio::sync::{mpsc, Mutex};
 use tonic::Status;
@@ -25,11 +28,14 @@ use synapse_ipc::v0::session_event::Kind;
 use synapse_ipc::v0::{
     FinalText, PartialText, SessionError as IpcSessionError, SessionEvent as IpcEvent,
 };
+use synapse_polish::{PolishProvider, PolishRequest};
 
 /// Channel buffer for downstream audio (gRPC client -> daemon).
 const AUDIO_BUFFER_FRAMES: usize = 64;
 /// Channel buffer for upstream events (daemon -> gRPC client).
 const EVENTS_BUFFER: usize = 16;
+/// Maximum time the Polish provider has to return. PRD §6 NFR.
+const POLISH_BUDGET: Duration = Duration::from_millis(600);
 
 /// Maps `session_id` to the channel that PushAudio writes into. Keeps the
 /// PushAudio handler stateless and lets multiple gRPC streams (StartSession
@@ -81,6 +87,7 @@ pub fn build_pipes() -> SessionPipes {
 pub async fn drive(
     id: SessionId,
     provider: Arc<dyn AsrProvider>,
+    polish: Option<Arc<dyn PolishProvider>>,
     grpc_audio_rx: mpsc::Receiver<Vec<i16>>,
     grpc_events_tx: mpsc::Sender<Result<IpcEvent, Status>>,
 ) {
@@ -145,13 +152,17 @@ pub async fn drive(
                     tracing::warn!(?err, "fsm rejected Final; aborting");
                     break;
                 }
-                // M1: Polish provider not wired. Mark skipped so the FSM walks
-                // the full happy path. M2 will run the polish step here.
-                let _ = session.handle(FsmEvent::PolishSkipped);
+
+                // ---- Polish step (best-effort) ----
+                let final_text = run_polish(&polish, &text, &id).await;
+                let final_segment = segment_id;
 
                 let evt = IpcEvent {
                     session_id: id.0.clone(),
-                    kind: Some(Kind::Final(FinalText { text, segment_id })),
+                    kind: Some(Kind::Final(FinalText {
+                        text: final_text,
+                        segment_id: final_segment,
+                    })),
                 };
                 let _ = grpc_events_tx.send(Ok(evt)).await;
                 let _ = session.handle(FsmEvent::Committed);
@@ -173,6 +184,52 @@ pub async fn drive(
         chars = session.transcript().chars().count(),
         "session ended"
     );
+}
+
+/// Run Polish if a provider is configured. Walks the FSM through
+/// `Polishing → Committing` (via `PolishDone` / `PolishSkipped`) and
+/// returns the text the daemon should commit to the gRPC client.
+///
+/// Decision tree:
+///
+/// - No provider configured              -> raw text, FSM does PolishSkipped
+/// - Polish succeeds + audit accepts     -> polished text, FSM does PolishDone
+/// - Polish times out / errors           -> raw text, FSM does PolishSkipped
+/// - Polish succeeds but audit rejects   -> raw text, FSM does PolishSkipped
+async fn run_polish(polish: &Option<Arc<dyn PolishProvider>>, raw: &str, id: &SessionId) -> String {
+    let Some(provider) = polish else {
+        return raw.to_string();
+    };
+    if raw.trim().is_empty() {
+        return raw.to_string();
+    }
+
+    let req = PolishRequest {
+        raw: raw.to_string(),
+        ..Default::default()
+    };
+    let started = std::time::Instant::now();
+    match provider.polish(req, POLISH_BUDGET).await {
+        Ok(polished) => {
+            tracing::debug!(
+                session_id = %id.0,
+                provider = provider.name(),
+                elapsed_ms = started.elapsed().as_millis(),
+                "polish ok"
+            );
+            polished
+        }
+        Err(e) => {
+            tracing::info!(
+                session_id = %id.0,
+                provider = provider.name(),
+                elapsed_ms = started.elapsed().as_millis(),
+                error = %e,
+                "polish skipped (using raw)"
+            );
+            raw.to_string()
+        }
+    }
 }
 
 fn error_event(id: &SessionId, err: &AsrError) -> IpcEvent {
