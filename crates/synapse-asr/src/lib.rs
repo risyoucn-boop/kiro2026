@@ -25,6 +25,7 @@ use thiserror::Error;
 use tokio::sync::mpsc;
 
 pub mod mock;
+pub mod streaming;
 
 #[derive(Debug, Error, Clone)]
 pub enum AsrError {

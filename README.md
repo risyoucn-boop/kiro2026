@@ -2,7 +2,7 @@
 
 > 中英文混说语音输入法 · Ubuntu 优先 · 跨平台 · 按量付费
 
-**状态：🚧 M1 进行中 — daemon 走通流式 Partial → Final 全链路（Mock provider）**
+**状态：🚧 M1.2 进行中 — daemon 走通流式 WebSocket ASR 全链路（含 Bearer auth）**
 
 Synapse Nexus（中文名"言枢"待定）是一款面向开发者与知识工作者的中英文混说语音输入法。
 让"想到 → 说出 → 落到光标处"在 1.5 秒内完成。
@@ -10,13 +10,16 @@ Synapse Nexus（中文名"言枢"待定）是一款面向开发者与知识工�
 ## 当前可跑的
 
 ```sh
+# 不带配置 — 用 Mock provider 演示流式 partial → final
 cargo run -p synapse-daemon --bin synapsed
-# → daemon 在 $XDG_RUNTIME_DIR/synapse-nexus/synapsed.sock 上监听 gRPC
-# → 默认装载 Mock ASR provider
-# → StartSession 真正走 FSM：Idle → Recording → Recognizing →
-#   Polishing → Committing → Terminated
-# → 客户端会收到："hello"（Partial）→ "hello world"（Partial）→ "hello world"（Final）
+
+# 接真实 WebSocket ASR 后端（必须实现 Synapse Streaming ASR v0 协议）
+SYNAPSE_ASR_ENDPOINT=wss://your-asr.example.com/v0 \
+SYNAPSE_ASR_TOKEN=...                              \
+cargo run -p synapse-daemon --bin synapsed
 ```
+
+详细的 v0 流式控制协议见 [`crates/synapse-asr/src/streaming.rs`](./crates/synapse-asr/src/streaming.rs) 顶部 docstring。
 
 ## 仓库结构
 

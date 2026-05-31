@@ -9,8 +9,17 @@ description = "Synapse Nexus — ASR provider trait and implementations"
 anyhow.workspace = true
 thiserror.workspace = true
 async-trait.workspace = true
-tokio = { workspace = true, features = ["sync", "time", "rt", "macros"] }
+tokio = { workspace = true, features = ["sync", "time", "rt", "macros", "net"] }
 tracing.workspace = true
 
+# Streaming WS provider
+tokio-tungstenite.workspace = true
+futures-util.workspace = true
+serde = { workspace = true }
+serde_json.workspace = true
+url.workspace = true
+
 [dev-dependencies]
-tokio = { workspace = true, features = ["sync", "time", "rt", "macros", "test-util"] }
+tokio = { workspace = true, features = ["sync", "time", "rt", "macros", "test-util", "net"] }
+tokio-tungstenite.workspace = true
+futures-util.workspace = true

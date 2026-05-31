@@ -32,3 +32,5 @@ uuid.workspace = true
 tempfile = "3"
 tower = { version = "0.5", features = ["util"] }
 hyper-util = { version = "0.1", features = ["tokio"] }
+tokio-tungstenite.workspace = true
+futures-util.workspace = true

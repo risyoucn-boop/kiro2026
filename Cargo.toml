@@ -31,6 +31,14 @@ tonic-build = "0.12"
 prost = "0.13"
 protoc-bin-vendored = "3"
 
+# WebSocket
+tokio-tungstenite = { version = "0.24", features = ["rustls-tls-native-roots"] }
+futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
+
+# JSON for our streaming ASR control protocol
+serde_json = "1"
+url = "2"
+
 # Errors / logging
 anyhow = "1"
 thiserror = "1"
