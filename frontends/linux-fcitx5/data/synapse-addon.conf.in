@@ -1,0 +1,9 @@
+[Addon]
+Name=Synapse Nexus
+Comment=Bilingual (zh-en) voice input method, powered by streaming ASR + LLM polish
+Category=InputMethod
+Version=@PROJECT_VERSION@
+Type=SharedLibrary
+Library=synapse
+OnRequest=False
+Configurable=True

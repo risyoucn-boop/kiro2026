@@ -1,0 +1,9 @@
+[package]
+name = "synapse-billing"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Synapse Nexus — local billing & quota (FR-BILL-*)"
+
+[dependencies]
+thiserror.workspace = true
