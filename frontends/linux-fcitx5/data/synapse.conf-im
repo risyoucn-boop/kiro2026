@@ -1,0 +1,7 @@
+[InputMethod]
+Name=Synapse Nexus
+Icon=synapse-nexus
+Label=Syn
+LangCode=zh_CN
+Addon=synapse
+Configurable=True
