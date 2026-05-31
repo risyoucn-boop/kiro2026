@@ -8,6 +8,7 @@ use tokio::net::UnixListener;
 use tokio_stream::wrappers::UnixListenerStream;
 use tonic::transport::Server;
 
+use synapse_asr::doubao::{DoubaoAsrProvider, DoubaoConfig};
 use synapse_asr::mock::MockProvider;
 use synapse_asr::streaming::{AuthMode, StreamingAsrProvider, StreamingProviderConfig};
 use synapse_asr::AsrProvider;
@@ -18,15 +19,66 @@ use synapse_ipc::v0::synapse_frontend_server::SynapseFrontendServer;
 /// Mock provider so first-run users without any config still get a working
 /// "hello world" demo without needing API keys.
 ///
-/// To use a real WebSocket ASR backend that speaks Synapse Streaming ASR v0:
+/// Selection precedence:
 ///
-/// ```text
-/// SYNAPSE_ASR_ENDPOINT=wss://your-asr.example.com/v0
-/// SYNAPSE_ASR_TOKEN=...     # optional bearer token
-/// ```
+/// 1. `SYNAPSE_ASR_PROVIDER` (explicit): `mock | streaming_ws | doubao`
+/// 2. If `SYNAPSE_DOUBAO_API_KEY` is set, use `doubao`.
+/// 3. If `SYNAPSE_ASR_ENDPOINT` is set, use `streaming_ws`.
+/// 4. Otherwise: `mock`.
+///
+/// Provider-specific env vars:
+///
+/// `streaming_ws`:
+///   - `SYNAPSE_ASR_ENDPOINT=wss://...`
+///   - `SYNAPSE_ASR_TOKEN=...` (optional bearer)
+///
+/// `doubao` (Volc bigmodel):
+///   - `SYNAPSE_DOUBAO_ENDPOINT=...` (optional, defaults to public URL)
+///   - `SYNAPSE_DOUBAO_API_KEY=ark-...` (required)
+///   - `SYNAPSE_DOUBAO_APP_ID=...` (optional)
+///   - `SYNAPSE_DOUBAO_RESOURCE_ID=...` (optional)
+///   - `SYNAPSE_DOUBAO_LANGUAGE=zh-CN` (optional)
 fn pick_provider() -> Arc<dyn AsrProvider> {
-    match std::env::var("SYNAPSE_ASR_ENDPOINT") {
-        Ok(endpoint) if !endpoint.is_empty() => {
+    let kind = std::env::var("SYNAPSE_ASR_PROVIDER")
+        .ok()
+        .filter(|s| !s.is_empty())
+        .unwrap_or_else(|| {
+            if env_nonempty("SYNAPSE_DOUBAO_API_KEY") {
+                "doubao".into()
+            } else if env_nonempty("SYNAPSE_ASR_ENDPOINT") {
+                "streaming_ws".into()
+            } else {
+                "mock".into()
+            }
+        });
+
+    match kind.as_str() {
+        "doubao" => {
+            let api_key = std::env::var("SYNAPSE_DOUBAO_API_KEY").unwrap_or_else(|_| {
+                tracing::error!("SYNAPSE_ASR_PROVIDER=doubao but SYNAPSE_DOUBAO_API_KEY is empty");
+                String::new()
+            });
+            let mut cfg = DoubaoConfig::new(api_key);
+            if let Ok(ep) = std::env::var("SYNAPSE_DOUBAO_ENDPOINT") {
+                if !ep.is_empty() {
+                    cfg.endpoint = ep;
+                }
+            }
+            cfg.app_id = std::env::var("SYNAPSE_DOUBAO_APP_ID")
+                .ok()
+                .filter(|s| !s.is_empty());
+            cfg.resource_id = std::env::var("SYNAPSE_DOUBAO_RESOURCE_ID")
+                .ok()
+                .filter(|s| !s.is_empty());
+            if let Ok(lang) = std::env::var("SYNAPSE_DOUBAO_LANGUAGE") {
+                if !lang.is_empty() {
+                    cfg.language = lang;
+                }
+            }
+            Arc::new(DoubaoAsrProvider::new(cfg))
+        }
+        "streaming_ws" => {
+            let endpoint = std::env::var("SYNAPSE_ASR_ENDPOINT").unwrap_or_default();
             let auth = std::env::var("SYNAPSE_ASR_TOKEN")
                 .ok()
                 .filter(|s| !s.is_empty())
@@ -40,6 +92,10 @@ fn pick_provider() -> Arc<dyn AsrProvider> {
         }
         _ => Arc::new(MockProvider::hello_world()),
     }
+}
+
+fn env_nonempty(name: &str) -> bool {
+    std::env::var(name).map(|s| !s.is_empty()).unwrap_or(false)
 }
 
 #[tokio::main]

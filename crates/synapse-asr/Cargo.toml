@@ -18,6 +18,9 @@ futures-util.workspace = true
 serde = { workspace = true }
 serde_json.workspace = true
 url.workspace = true
+uuid.workspace = true
+bytes = "1"
+flate2 = "1"
 
 [dev-dependencies]
 tokio = { workspace = true, features = ["sync", "time", "rt", "macros", "test-util", "net"] }

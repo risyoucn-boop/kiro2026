@@ -11,3 +11,11 @@ frontends/linux-fcitx5/build/
 .vscode/
 *.swp
 .DS_Store
+
+# Secrets — NEVER commit. Use .env.example as the template.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/

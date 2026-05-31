@@ -353,13 +353,36 @@ warn_threshold_chars = 100
 
 ### 6.1 豆包流式 ASR（Provider 示例）
 
-- 协议：WebSocket，二进制消息
+实现：[`crates/synapse-asr/src/doubao/`](../crates/synapse-asr/src/doubao/)
+
+- 协议：WebSocket，二进制消息，文档见 <https://www.volcengine.com/docs/6561/1354869>
 - 帧大小：建议 20ms（16kHz / 16bit mono → 640 字节 / 帧）
-- 鉴权：Volc Engine SigV4
+- 鉴权：ARK API key 通过 `Authorization: Bearer ark-...`
+- 帧格式：4 字节固定 header + 可选 4 字节序列号 + 4 字节 payload size (BE u32) + payload
+- 支持 gzip 压缩响应（自动解压）
 - 实现要点：
-  - **永远 keep-alive 一条 ws 连接**，避免冷启动 TCP/TLS 握手（首字延迟杀手）
-  - 心跳：30s 一次
-  - 错误重连：指数退避 + jitter
+  - **永远 keep-alive 一条 ws 连接**（M1.4 计划），避免冷启动 TCP/TLS 握手（首字延迟杀手）
+  - 心跳：30s 一次（M1.4）
+  - 错误重连：指数退避 + jitter（M1.4）
+
+#### 配置
+
+环境变量：
+- `SYNAPSE_DOUBAO_API_KEY=ark-...` (必填)
+- `SYNAPSE_DOUBAO_ENDPOINT=...` (默认 `wss://openspeech.bytedance.com/api/v3/sauc/bigmodel`)
+- `SYNAPSE_DOUBAO_APP_ID=...` (可选)
+- `SYNAPSE_DOUBAO_RESOURCE_ID=...` (可选)
+
+#### 错误码映射
+
+| Volc `code` 范围 | 映射到 `AsrError` |
+|---|---|
+| 45000001-45000999 | `Auth` |
+| 45001001-45001999 | `QuotaExhausted` |
+| 45100001-45100999 | `Timeout` |
+| 其它非零 | `Protocol` |
+| HTTP 401/403 (握手期) | `Auth` |
+| HTTP 429 (握手期) | `QuotaExhausted` |
 
 ### 6.2 Polish（Qwen-Flash）
 
