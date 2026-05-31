@@ -1,0 +1,44 @@
+# Synapse Nexus core daemon — user-level systemd service.
+#
+# Install:
+#   install -Dm644 synapsed.service ~/.config/systemd/user/synapsed.service
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now synapsed
+#
+# Logs:
+#   journalctl --user -u synapsed -f
+
+[Unit]
+Description=Synapse Nexus core daemon (synapsed)
+Documentation=https://github.com/risyoucn-boop/kiro2026
+# We bind a Unix socket under $XDG_RUNTIME_DIR; that dir requires the user
+# session to be active.
+After=default.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/synapsed
+Restart=on-failure
+RestartSec=2
+
+# Hardening — daemon must NEVER need privileges. See ARCHITECTURE.md §9.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+LockPersonality=true
+MemoryDenyWriteExecute=true
+# Daemon writes only to its runtime socket dir and user config dir.
+ReadWritePaths=%t/synapse-nexus %h/.config/synapse-nexus
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

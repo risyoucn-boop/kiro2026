@@ -1,0 +1,60 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/synapse-core",
+    "crates/synapse-asr",
+    "crates/synapse-polish",
+    "crates/synapse-lexicon",
+    "crates/synapse-billing",
+    "crates/synapse-audio",
+    "crates/synapse-config",
+    "crates/synapse-ipc",
+    "crates/synapse-daemon",
+]
+
+[workspace.package]
+version = "0.0.1"
+edition = "2021"
+rust-version = "1.85"
+license = "Apache-2.0 OR MIT"
+authors = ["Synapse Nexus contributors"]
+repository = "https://github.com/risyoucn-boop/kiro2026"
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1.40", features = ["full"] }
+tokio-stream = { version = "0.1", features = ["net"] }
+
+# gRPC / protobuf
+tonic = "0.12"
+tonic-build = "0.12"
+prost = "0.13"
+protoc-bin-vendored = "3"
+
+# Errors / logging
+anyhow = "1"
+thiserror = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Misc
+async-trait = "0.1"
+uuid = { version = "1", features = ["v4"] }
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+directories = "5"
+
+# Internal
+synapse-core = { path = "crates/synapse-core" }
+synapse-asr = { path = "crates/synapse-asr" }
+synapse-polish = { path = "crates/synapse-polish" }
+synapse-lexicon = { path = "crates/synapse-lexicon" }
+synapse-billing = { path = "crates/synapse-billing" }
+synapse-audio = { path = "crates/synapse-audio" }
+synapse-config = { path = "crates/synapse-config" }
+synapse-ipc = { path = "crates/synapse-ipc" }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = "symbols"

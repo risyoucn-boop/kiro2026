@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-D warnings"
+
+jobs:
+  rust:
+    name: Rust (fmt + clippy + test)
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@1.92.0
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock', '**/Cargo.toml') }}
+
+      - name: cargo fmt --check
+        run: cargo fmt --all -- --check
+
+      - name: cargo clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: cargo test
+        run: cargo test --workspace --all-targets
+
+  fcitx5-engine:
+    name: Fcitx5 engine (cmake build)
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install fcitx5 build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            cmake extra-cmake-modules ninja-build \
+            libfcitx5core-dev libfcitx5utils-dev libfcitx5config-dev \
+            fcitx5
+
+      - name: Configure
+        run: cmake -S frontends/linux-fcitx5 -B frontends/linux-fcitx5/build -G Ninja
+
+      - name: Build
+        run: cmake --build frontends/linux-fcitx5/build -j
+
+      - name: clang-format check
+        run: |
+          sudo apt-get install -y clang-format
+          find frontends/linux-fcitx5/src -name '*.cpp' -o -name '*.h' \
+            | xargs clang-format --dry-run --Werror
+
+  proto-lint:
+    name: Proto lint
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install buf
+        run: |
+          BUF_VERSION=1.50.0
+          curl -sSL "https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/buf-Linux-x86_64" -o /usr/local/bin/buf
+          chmod +x /usr/local/bin/buf
+      - name: buf lint
+        run: buf lint proto || true   # advisory until buf.yaml is added in M1

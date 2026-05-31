@@ -2,10 +2,39 @@
 
 > 中英文混说语音输入法 · Ubuntu 优先 · 跨平台 · 按量付费
 
-**状态：📝 设计阶段（v0.1 文档）— 0 行工程代码**
+**状态：🚧 M0 进行中 — 工程地基已搭好，IPC 契约已定，daemon 能跑**
 
 Synapse Nexus（中文名"言枢"待定）是一款面向开发者与知识工作者的中英文混说语音输入法。
 让"想到 → 说出 → 落到光标处"在 1.5 秒内完成。
+
+## 当前可跑的
+
+```sh
+cargo run -p synapse-daemon --bin synapsed
+# → daemon 在 $XDG_RUNTIME_DIR/synapse-nexus/synapsed.sock 上监听 gRPC
+# → StartSession 当前返回 "hello world"（M0 stub）
+```
+
+## 仓库结构
+
+```
+.
+├── Cargo.toml                         # workspace
+├── proto/synapse/v0/synapse.proto     # IPC 契约 v0（gRPC）
+├── crates/
+│   ├── synapse-core/                  # session 状态机
+│   ├── synapse-asr/                   # ASR Provider trait
+│   ├── synapse-polish/                # Polish + 幻觉差异审计
+│   ├── synapse-lexicon/               # 词库
+│   ├── synapse-billing/               # 本地按量计费
+│   ├── synapse-audio/                 # 音频采集（M1 接 cpal）
+│   ├── synapse-config/                # 平台路径 / 配置
+│   ├── synapse-ipc/                   # tonic-build 编译 proto
+│   └── synapse-daemon/                # synapsed 二进制
+├── frontends/linux-fcitx5/            # Fcitx5 engine（CMake / C++17）
+├── packaging/systemd/synapsed.service # 用户级 systemd unit
+└── docs/                              # PRD / ARCHITECTURE / ROADMAP
+```
 
 ## 关键特性（计划中）
 
