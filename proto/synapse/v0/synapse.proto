@@ -1,0 +1,86 @@
+// Synapse Nexus — IPC contract v0
+//
+// This file is the single source of truth for the wire protocol between
+// platform frontends (fcitx5 / TSF / iOS Keyboard Extension) and the Rust
+// core daemon (synapsed).
+//
+// Stability: v0 is unstable. Breaking changes are allowed before v1.0 GA.
+
+syntax = "proto3";
+
+package synapse.v0;
+
+// Frontend -> daemon. The daemon owns the heavy lifting (ASR, Polish,
+// billing, lexicon). Frontends only do audio capture, text injection, UI.
+service SynapseFrontend {
+  // Begin a new dictation session. The server streams events back
+  // (Partial / Final / Error / Quota updates) until the client calls
+  // StopSession or the stream is closed.
+  rpc StartSession(StartSessionRequest) returns (stream SessionEvent);
+
+  // End the session early (e.g. user released push-to-talk).
+  rpc StopSession(StopSessionRequest) returns (StopSessionResponse);
+
+  // Push captured audio frames into a session. Client-streaming.
+  // Audio format: 16 kHz, 16-bit signed mono PCM, little-endian, ~20ms / frame.
+  rpc PushAudio(stream AudioFrame) returns (PushAudioAck);
+}
+
+message StartSessionRequest {
+  // Stable per-install client identifier (UUID). Used for billing dedup.
+  string client_id = 1;
+
+  // Bundle id / window class / app name of the focused application,
+  // best-effort. Used to pick the right lexicon (FR-CTX-02) and to
+  // detect sensitive apps (FR-PRIV-04).
+  string app_context = 2;
+
+  // Up to 50 chars before the cursor (FR-CTX-01). Empty if not available.
+  string context_before = 3;
+}
+
+message StopSessionRequest {
+  string session_id = 1;
+}
+
+message StopSessionResponse {}
+
+message AudioFrame {
+  string session_id = 1;
+  bytes pcm = 2;       // 16kHz mono i16 LE
+  uint64 seq = 3;      // monotonic per session, starting at 0
+}
+
+message PushAudioAck {
+  uint64 received = 1;  // total frames received
+}
+
+message SessionEvent {
+  string session_id = 1;
+  oneof kind {
+    PartialText partial = 2;
+    FinalText   final   = 3;  // reserved keyword in many languages, kept for clarity
+    SessionError error  = 4;
+    QuotaUpdate quota   = 5;
+  }
+}
+
+message PartialText {
+  string text = 1;
+  float  confidence = 2;
+}
+
+message FinalText {
+  string text = 1;
+  uint64 segment_id = 2;
+}
+
+message SessionError {
+  string code = 1;       // e.g. "asr.timeout", "polish.budget_exceeded"
+  string message = 2;
+  bool   retryable = 3;
+}
+
+message QuotaUpdate {
+  int64 remaining_chars = 1;
+}

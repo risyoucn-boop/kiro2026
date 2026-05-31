@@ -1,0 +1,39 @@
+[package]
+name = "synapse-daemon"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Synapse Nexus — core daemon binary (synapsed)"
+
+[[bin]]
+name = "synapsed"
+path = "src/main.rs"
+
+[lib]
+name = "synapse_daemon"
+path = "src/lib.rs"
+
+[dependencies]
+synapse-ipc.workspace = true
+synapse-config.workspace = true
+synapse-core.workspace = true
+synapse-asr.workspace = true
+synapse-polish.workspace = true
+
+tokio.workspace = true
+tokio-stream.workspace = true
+tonic.workspace = true
+async-trait.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+uuid.workspace = true
+
+[dev-dependencies]
+tempfile = "3"
+tower = { version = "0.5", features = ["util"] }
+hyper-util = { version = "0.1", features = ["tokio"] }
+tokio-tungstenite.workspace = true
+futures-util.workspace = true
+wiremock = "0.6"
+serde_json.workspace = true
