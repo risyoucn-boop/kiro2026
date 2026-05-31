@@ -26,6 +26,8 @@
 
 **目标**：可以在 Ubuntu 上跑通"按下快捷键 → fcitx5 调用 daemon → daemon 回一个写死的 'hello'"全链路。
 
+**Wayland 是 v1.0 必交付项**（PRD §13 Q1 已决），TV-1 验证不能跳。
+
 ### 交付物
 
 - [ ] Rust workspace + 9 个 crate 骨架（见 ARCHITECTURE §3.1）
@@ -43,7 +45,7 @@
 
 ### 关键技术验证（必须在本周完成）
 
-- **TV-1（最高优先级）**：Wayland + fcitx5 + Electron（VSCode）的 commitString 兼容性。如果失败，整个 Ubuntu 战略要重新评估。
+- **TV-1（最高优先级，决定 v1.0 战略）**：Wayland + fcitx5 + Electron（VSCode）的 commitString 兼容性。如果失败，需要 fallback 路径（IBus 协议 / 直接走 wlroots virtual-keyboard 协议）。**不允许通过砍 Wayland 来回避**。
 - **TV-2**：cpal 在 PipeWire 默认环境下抓 16kHz mono 是否稳定。
 
 ---
