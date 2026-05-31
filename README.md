@@ -2,7 +2,7 @@
 
 > 中英文混说语音输入法 · Ubuntu 优先 · 跨平台 · 按量付费
 
-**状态：🚧 M0 进行中 — 工程地基已搭好，IPC 契约已定，daemon 能跑**
+**状态：🚧 M1 进行中 — daemon 走通流式 Partial → Final 全链路（Mock provider）**
 
 Synapse Nexus（中文名"言枢"待定）是一款面向开发者与知识工作者的中英文混说语音输入法。
 让"想到 → 说出 → 落到光标处"在 1.5 秒内完成。
@@ -12,7 +12,10 @@ Synapse Nexus（中文名"言枢"待定）是一款面向开发者与知识工�
 ```sh
 cargo run -p synapse-daemon --bin synapsed
 # → daemon 在 $XDG_RUNTIME_DIR/synapse-nexus/synapsed.sock 上监听 gRPC
-# → StartSession 当前返回 "hello world"（M0 stub）
+# → 默认装载 Mock ASR provider
+# → StartSession 真正走 FSM：Idle → Recording → Recognizing →
+#   Polishing → Committing → Terminated
+# → 客户端会收到："hello"（Partial）→ "hello world"（Partial）→ "hello world"（Final）
 ```
 
 ## 仓库结构

@@ -1,19 +1,21 @@
 //! synapsed — the Synapse Nexus core daemon.
 //!
-//! M0 scope: bind a Unix domain socket, expose the v0 gRPC `SynapseFrontend`
-//! service, and respond to every `StartSession` by streaming back a single
-//! `FinalText { text: "hello world" }` event. No audio, no ASR provider, no
-//! Polish — those land in M1 / M2.
+//! M1 scope: bind a Unix domain socket, expose the v0 gRPC `SynapseFrontend`
+//! service, and orchestrate sessions through the configured `AsrProvider`.
+//! The default binary uses the Mock provider so anyone can run end-to-end
+//! against `synapsed` without external API keys.
+
+use std::path::Path;
+use std::sync::Arc;
 
 use anyhow::{Context, Result};
-use std::path::Path;
 use tokio::net::UnixListener;
 use tokio_stream::wrappers::UnixListenerStream;
 use tonic::transport::Server;
 
+use synapse_asr::{mock::MockProvider, AsrProvider};
+use synapse_daemon::service::FrontendService;
 use synapse_ipc::v0::synapse_frontend_server::SynapseFrontendServer;
-
-use synapse_daemon::service;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -29,12 +31,16 @@ async fn main() -> Result<()> {
 
     let listener = UnixListener::bind(&socket_path)
         .with_context(|| format!("failed to bind {}", socket_path.display()))?;
-    // Permission 0600 so other local users cannot send audio through us.
     set_socket_perms_0600(&socket_path)?;
 
-    tracing::info!(socket = %socket_path.display(), "synapsed ready");
+    let provider: Arc<dyn AsrProvider> = Arc::new(MockProvider::hello_world());
+    tracing::info!(
+        socket = %socket_path.display(),
+        asr_provider = provider.name(),
+        "synapsed ready"
+    );
 
-    let frontend = service::FrontendService;
+    let frontend = FrontendService::new(provider);
 
     Server::builder()
         .add_service(SynapseFrontendServer::new(frontend))

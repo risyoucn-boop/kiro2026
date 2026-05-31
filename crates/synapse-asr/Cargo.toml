@@ -9,3 +9,8 @@ description = "Synapse Nexus — ASR provider trait and implementations"
 anyhow.workspace = true
 thiserror.workspace = true
 async-trait.workspace = true
+tokio = { workspace = true, features = ["sync", "time", "rt", "macros"] }
+tracing.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["sync", "time", "rt", "macros", "test-util"] }

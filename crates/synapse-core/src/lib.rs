@@ -1,11 +1,12 @@
 //! Synapse Nexus core orchestration.
 //!
-//! Owns the session state machine described in `docs/ARCHITECTURE.md` §3.3:
-//! `Idle -> Recording -> Recognizing -> Polishing -> Committing -> Idle`.
-//!
-//! M0 status: skeleton only. Full state machine wiring in M1.
+//! Owns the session state machine described in `docs/ARCHITECTURE.md` §3.3.
 
 use uuid::Uuid;
+
+pub mod state;
+
+pub use state::{FsmEvent, Session, SessionState, TransitionError};
 
 /// A dictation session — one push-to-talk press, one identifier.
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
@@ -21,16 +22,6 @@ impl Default for SessionId {
     fn default() -> Self {
         Self::new()
     }
-}
-
-/// Session lifecycle states. See ARCHITECTURE.md §3.3.
-#[derive(Debug, Clone, Copy, Eq, PartialEq)]
-pub enum SessionState {
-    Idle,
-    Recording,
-    Recognizing,
-    Polishing,
-    Committing,
 }
 
 #[cfg(test)]

@@ -1038,6 +1038,8 @@ dependencies = [
  "anyhow",
  "async-trait",
  "thiserror",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]
@@ -1082,6 +1084,7 @@ dependencies = [
  "anyhow",
  "async-trait",
  "hyper-util",
+ "synapse-asr",
  "synapse-config",
  "synapse-core",
  "synapse-ipc",

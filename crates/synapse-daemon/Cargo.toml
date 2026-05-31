@@ -17,6 +17,7 @@ path = "src/lib.rs"
 synapse-ipc.workspace = true
 synapse-config.workspace = true
 synapse-core.workspace = true
+synapse-asr.workspace = true
 
 tokio.workspace = true
 tokio-stream.workspace = true

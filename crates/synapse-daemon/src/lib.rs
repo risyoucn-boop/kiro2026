@@ -5,3 +5,4 @@
 //! library to a Unix socket listener.
 
 pub mod service;
+pub mod session;
