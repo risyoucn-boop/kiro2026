@@ -1,0 +1,9 @@
+[package]
+name = "synapse-audio"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Synapse Nexus — audio capture & VAD (cpal-based on desktop)"
+
+[dependencies]
+thiserror.workspace = true
